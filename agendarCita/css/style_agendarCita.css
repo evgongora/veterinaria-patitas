@@ -1,0 +1,24 @@
+body {
+    margin: 0;
+}
+
+
+
+/* pie de pagina*/
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    background-color: #0a2b4d;
+    color: white;
+    padding: 0.1rem 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* http://localhost:8080/veterinaria-patitas/agendarCita/agendarCita.html */
