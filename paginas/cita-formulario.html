@@ -2,20 +2,72 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Agendar Cita - Veterinaria Patitas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Cita | Veterinaria Patitas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
-    <header>
-        <h1>Agendar Cita</h1>
-    </header>
-    <main></main>
-    <footer>
-        <div class="footer">
-            <p>SC502 - Proyecto Administración Web Cliente/Servidor</p>
-            <p>&copy; 2026 Veterinaria Patitas. Sistema de Gestión Veterinaria.</p>
+    <div class="container main-content">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card card-custom p-4">
+                    <h1 class="section-title mb-2">Agendar Cita</h1>
+                    <p class="section-subtitle mb-4">Completa la información de la cita.</p>
+
+                    <form id="formCita">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Animal tratado</label>
+                                <select id="animal" class="form-select"></select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Veterinario asignado</label>
+                                <select id="veterinario" class="form-select">
+                                    <option value="">Seleccione</option>
+                                    <option value="Dr. Carlos Vega">Dr. Carlos Vega</option>
+                                    <option value="Dra. Elena Ruiz">Dra. Elena Ruiz</option>
+                                    <option value="Dr. Luis Mora">Dr. Luis Mora</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Fecha</label>
+                                <input type="date" id="fecha" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Hora inicio</label>
+                                <input type="time" id="horaInicio" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Hora fin</label>
+                                <input type="time" id="horaFin" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tipo de cita</label>
+                                <select id="tipo" class="form-select">
+                                    <option value="">Seleccione</option>
+                                    <option value="Control">Control</option>
+                                    <option value="Vacunación">Vacunación</option>
+                                    <option value="Chequeo">Chequeo</option>
+                                    <option value="Emergencia">Emergencia</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Nota especial</label>
+                                <textarea id="nota" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 d-flex gap-2">
+                            <button type="submit" class="btn btn-principal">Continuar</button>
+                            <a href="citas.html" class="btn btn-outline-custom">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    </footer>
+    </div>
+
     <script src="../js/validaciones.js"></script>
     <script src="../js/citas.js"></script>
 </body>
