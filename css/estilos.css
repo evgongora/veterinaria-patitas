@@ -1,8 +1,38 @@
 /* Veterinaria Patitas - Estilos consolidados */
 
+:root {
+    --verde-principal: #2E7D32;
+    --verde-claro: #A5D6A7;
+    --azul-suave: #1976D2;
+    --gris-fondo: #F5F5F5;
+    --blanco: #FFFFFF;
+
+    --texto-primario: #111827;
+    --texto-secundario: #4B5563;
+    --texto-deshabilitado: #6B7280;
+
+    --borde-suave: #E5E7EB;
+    --borde-medio: #D1D5DB;
+
+    --exito-fondo: #DCFCE7;
+    --exito-texto: #15803D;
+
+    --advertencia-fondo: #FEF3C7;
+    --advertencia-texto: #B45309;
+
+    --error-fondo: #FEE2E2;
+    --error-texto: #B91C1C;
+
+    --radio-card: 18px;
+    --radio-input: 12px;
+    --sombra-suave: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
 body {
     margin: 0;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--gris-fondo);
+    color: var(--texto-primario);
 }
 
 /* Header */
@@ -10,13 +40,13 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: white;
+    background-color: var(--blanco);
     padding: 1rem 2rem;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
 .header h1 {
-    color: #2e7d32;
+    color: var(--verde-principal);
     font-family: Arial, sans-serif;
     font-size: 2rem;
 }
@@ -26,34 +56,43 @@ body {
     gap: 1rem;
 }
 
-/* Botón Registrarse */
-.navRegistrarseBtn .btn {
+.nav-buttons .btn {
     padding: 1rem 1.2rem;
-    background-color: #2e7d32;
-    color: white;
     text-decoration: none;
     border-radius: 15px;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Botón Registrarse */
+.navRegistrarseBtn .btn {
+    background-color: var(--verde-principal);
+    color: white;
+}
+
+.navRegistrarseBtn .btn:hover {
+    background-color: #1b5e20;
+    color: white;
 }
 
 /* Botón Iniciar Sesión */
 .navIniciarSesionBtn .btn {
-    padding: 1rem 1.2rem;
-    border: 3px solid #2e7d32;
+    border: 3px solid var(--verde-principal);
     background-color: white;
     color: black;
-    text-decoration: none;
-    border-radius: 15px;
 }
 
-/* Hover de botones */
-.nav-buttons .btn:hover {
-    background-color: #1b5e20;
+.navIniciarSesionBtn .btn:hover {
+    background-color: var(--verde-principal);
     color: white;
 }
 
 /* Main */
 main {
     padding: 2rem;
+}
+
+.main-content {
+    padding: 30px 0;
 }
 
 .titulo {
@@ -65,23 +104,141 @@ main {
 
 .descripcion {
     text-align: left;
-    color: #6b7280;
-    font-size: 1.40rem;
+    color: var(--texto-deshabilitado);
+    font-size: 1.4rem;
     margin-bottom: 2rem;
 }
 
 /* Agendar cita */
-.agendarCita .btn:hover {
-    background-color: #175da3;
-    color: white;
-}
-
 .navAgendarCitaBtn .btn {
     padding: 1rem 1.2rem;
-    background-color: #1976D2;
+    background-color: var(--azul-suave);
     color: white;
     text-decoration: none;
     border-radius: 15px;
+}
+
+.navAgendarCitaBtn .btn:hover,
+.agendarCita .btn:hover {
+    background-color: #145ca4;
+    color: white;
+}
+
+/* Cards y secciones */
+.card-custom {
+    background-color: var(--blanco);
+    border: 1px solid var(--borde-suave);
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-suave);
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.section-subtitle {
+    color: var(--texto-secundario);
+    margin-bottom: 0;
+}
+
+/* Formularios */
+.form-label {
+    font-weight: 600;
+}
+
+.form-control,
+.form-select,
+textarea {
+    border-radius: var(--radio-input);
+    border: 1px solid var(--borde-medio);
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
+    border-color: var(--verde-principal);
+    box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.15);
+}
+
+/* Botones reutilizables */
+.btn-principal {
+    background-color: var(--verde-principal);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-weight: bold;
+}
+
+.btn-principal:hover {
+    background-color: #256628;
+    color: white;
+}
+
+.btn-secundario {
+    background-color: var(--azul-suave);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-weight: bold;
+}
+
+.btn-secundario:hover {
+    background-color: #145ca4;
+    color: white;
+}
+
+.btn-outline-custom {
+    border: 1px solid var(--borde-medio);
+    background-color: white;
+    color: var(--texto-primario);
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-weight: bold;
+}
+
+.btn-outline-custom:hover {
+    background-color: #f8f9fa;
+}
+
+/* Tablas */
+.table thead th {
+    background-color: #f8f9fa;
+}
+
+/* Badges */
+.badge-exito {
+    background-color: var(--exito-fondo);
+    color: var(--exito-texto);
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.badge-advertencia {
+    background-color: var(--advertencia-fondo);
+    color: var(--advertencia-texto);
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.badge-error {
+    background-color: var(--error-fondo);
+    color: var(--error-texto);
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.oculto {
+    display: none;
 }
 
 /* Footer */
@@ -101,11 +258,10 @@ main {
 
 /* ============================================
    Páginas de autenticación (login / registro)
-   Paleta: Verde Principal #2E7D32, Verde Claro #A5D6A7, Azul Suave #1976D2
    ============================================ */
 .auth-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, #2E7D32 0%, #A5D6A7 100%);
+    background: linear-gradient(135deg, var(--verde-principal) 0%, var(--verde-claro) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -120,7 +276,7 @@ main {
 .auth-card {
     border-radius: 1rem;
     border: none;
-    background: #FFFFFF;
+    background: var(--blanco);
 }
 
 .auth-header .auth-logo-icon {
@@ -128,7 +284,7 @@ main {
 }
 
 .auth-title {
-    color: #2E7D32;
+    color: var(--verde-principal);
     font-size: 1.5rem;
     font-weight: 700;
 }
@@ -138,8 +294,8 @@ main {
 }
 
 .auth-page .btn-primary {
-    background-color: #2E7D32;
-    border-color: #2E7D32;
+    background-color: var(--verde-principal);
+    border-color: var(--verde-principal);
     font-weight: 600;
 }
 
@@ -149,13 +305,13 @@ main {
 }
 
 .auth-page .form-control:focus {
-    border-color: #A5D6A7;
+    border-color: var(--verde-claro);
     box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.25);
 }
 
 .auth-links a.fw-semibold,
 .auth-links a.text-primary {
-    color: #2E7D32 !important;
+    color: var(--verde-principal) !important;
 }
 
 .auth-links a.fw-semibold:hover,
@@ -165,7 +321,7 @@ main {
 
 .auth-page .alert-info {
     background-color: rgba(25, 118, 210, 0.15);
-    border-color: #1976D2;
+    border-color: var(--azul-suave);
     color: #0d47a1;
 }
 
