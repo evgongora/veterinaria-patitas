@@ -98,3 +98,85 @@ main {
     bottom: 0;
     width: 100%;
 }
+
+/* ============================================
+   Páginas de autenticación (login / registro)
+   Paleta: Verde Principal #2E7D32, Verde Claro #A5D6A7, Azul Suave #1976D2
+   ============================================ */
+.auth-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #2E7D32 0%, #A5D6A7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 420px;
+}
+
+.auth-card {
+    border-radius: 1rem;
+    border: none;
+    background: #FFFFFF;
+}
+
+.auth-header .auth-logo-icon {
+    font-size: 1.5rem;
+}
+
+.auth-title {
+    color: #2E7D32;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.auth-subtitle {
+    font-size: 0.95rem;
+}
+
+.auth-page .btn-primary {
+    background-color: #2E7D32;
+    border-color: #2E7D32;
+    font-weight: 600;
+}
+
+.auth-page .btn-primary:hover {
+    background-color: #1b5e20;
+    border-color: #1b5e20;
+}
+
+.auth-page .form-control:focus {
+    border-color: #A5D6A7;
+    box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.25);
+}
+
+.auth-links a.fw-semibold,
+.auth-links a.text-primary {
+    color: #2E7D32 !important;
+}
+
+.auth-links a.fw-semibold:hover,
+.auth-links a.text-primary:hover {
+    color: #1b5e20 !important;
+}
+
+.auth-page .alert-info {
+    background-color: rgba(25, 118, 210, 0.15);
+    border-color: #1976D2;
+    color: #0d47a1;
+}
+
+.auth-page .alert-danger {
+    background-color: #fef2f2;
+    border-color: #dc2626;
+    color: #991b1b;
+}
+
+.auth-page .alert-success {
+    background-color: #f0fdf4;
+    border-color: #22c55e;
+    color: #166534;
+}
