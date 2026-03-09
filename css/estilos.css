@@ -256,6 +256,83 @@ textarea:focus {
     width: 100%;
 }
 
+
+/* Colores de servicios (lo vamos a reviasr despues para bver el merge) */
+:root {
+    --patitas-verde: #2E7D32;
+    --patitas-verde-claro: #A5D6A7;
+    --patitas-azul: #1976D2;
+    --patitas-gris-fondo: #F5F5F5;
+    --patitas-blanco: #FFFFFF;
+
+    --patitas-texto: #111827;      
+    --patitas-texto-2: #4B5563;   
+    --patitas-borde: #E5E7EB;   
+}
+
+body {
+    background-color: var(--patitas-gris-fondo);
+    color: var(--patitas-texto);
+}
+
+.navbar.bg-primary {
+    background-color: var(--patitas-verde) !important;
+}
+
+.navbar .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    color: var(--patitas-blanco) !important;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* Botón +nuevo servicio*/
+.btn-success {
+    background-color: var(--patitas-verde) !important;
+    border-color: var(--patitas-verde) !important;
+}
+
+.btn-success:hover {
+    background-color: #1B5E20 !important;
+    border-color: #1B5E20 !important;
+}
+
+.btn-primary {
+    background-color: var(--patitas-azul) !important;
+    border-color: var(--patitas-azul) !important;
+}
+
+.btn-primary:hover {
+    background-color: #175DA3 !important;
+    border-color: #175DA3 !important;
+}
+
+/* Cards*/
+.card {
+    border-color: var(--patitas-borde);
+}
+
+/* Badges de estado: activo - inactivo */
+.badge.bg-success {
+    background-color: var(--patitas-verde) !important;
+}
+
+.badge.bg-secondary {
+    background-color: #6B7280 !important;
+}
+
+.card-servicio {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.card-servicio:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
 /* ============================================
    Páginas de autenticación (login / registro)
    ============================================ */
