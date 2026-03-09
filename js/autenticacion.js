@@ -11,9 +11,6 @@ const Auth = {
     'cliente@patitas.com': '123456'
   },
 
-  /**
-   * Inicializa el formulario de login
-   */
   initLogin() {
     const form = document.getElementById('login-form');
     const alertEl = document.getElementById('login-alert');
@@ -52,16 +49,14 @@ const Auth = {
 
       const claveEsperada = this.CREDENCIALES[email];
       if (claveEsperada && claveEsperada === password) {
-        window.location.href = 'panel.html';
+        const esAdmin = email === 'admin@patitas.com';
+        window.location.href = esAdmin ? 'panel-admin.html' : 'panel.html';
       } else {
         this.mostrarAlerta(alertEl, 'Correo o contraseña incorrectos. Intenta de nuevo.', 'danger');
       }
     });
   },
 
-  /**
-   * Inicializa el formulario de registro
-   */
   initRegistro() {
     const form = document.getElementById('registro-form');
     const alertEl = document.getElementById('registro-alert');
