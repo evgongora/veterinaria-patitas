@@ -50,6 +50,8 @@ const Auth = {
       const claveEsperada = this.CREDENCIALES[email];
       if (claveEsperada && claveEsperada === password) {
         const esAdmin = email === 'admin@patitas.com';
+        const usuario = { nombre: esAdmin ? 'Admin Veterinaria' : 'Juan Pérez', rol: esAdmin ? 'admin' : 'cliente', email };
+        try { localStorage.setItem('usuarioActivo', JSON.stringify(usuario)); } catch (e) {}
         window.location.href = esAdmin ? 'panel-admin.html' : 'panel.html';
       } else {
         this.mostrarAlerta(alertEl, 'Correo o contraseña incorrectos. Intenta de nuevo.', 'danger');

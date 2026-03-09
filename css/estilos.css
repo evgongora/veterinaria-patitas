@@ -140,6 +140,16 @@ main {
     padding: 0.5rem 0;
 }
 
+/* Servicios - cards cliente */
+.servicio-card-hover {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.servicio-card-link:hover .servicio-card-hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1) !important;
+}
+
 /* Páginas de autenticación (login / registro)
    Paleta: Verde Principal #2E7D32, Verde Claro #A5D6A7, Azul Suave #1976D2 */
 .auth-page {
