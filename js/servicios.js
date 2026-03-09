@@ -134,42 +134,38 @@
   }
 
   function pintarCardsCliente() {
-  const cont = document.getElementById("cardsServicios");
-  if (!cont) return;
+    const cont = document.getElementById("cardsServicios");
+    if (!cont) return;
 
-  const servicios = leerServicios().filter((s) => s.estado === "Activo");
-  cont.innerHTML = "";
+    const servicios = leerServicios().filter((s) => s.estado === "Activo");
+    cont.innerHTML = "";
 
-  servicios.forEach((s) => {
-    const col = document.createElement("div");
-    col.className = "col-12 col-md-6 col-lg-5";
+    servicios.forEach((s) => {
+      const col = document.createElement("div");
+      col.className = "col-12 col-md-6 col-lg-4 col-xl-3";
 
-    col.innerHTML = `
-      <a class="text-decoration-none text-dark"
-         href="citas.html?servicio=${encodeURIComponent(s.id)}">
+      const precioStr = s.precio > 0 ? formatearColones(s.precio) : "Consultar";
+      const duracion = s.duracionMin ? s.duracionMin + " min" : "";
 
-        <div class="card shadow-sm border-0 h-100 card-servicio" style="border-radius:18px;">
-          <div class="card-body d-flex gap-3 align-items-center p-4">
-
-            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                 style="width:64px;height:64px;background:#A5D6A7;color:#1B5E20;">
-              <span style="font-size:26px;">${s.icono || "🐾"}</span>
+      col.innerHTML = `
+        <a class="text-decoration-none text-dark servicio-card-link" href="cita-formulario.html?servicio=${encodeURIComponent(s.id)}">
+          <div class="card shadow-sm border-0 h-100 servicio-card-hover">
+            <div class="card-body p-4">
+              <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;background:rgba(46,125,50,0.15);color:#2E7D32;font-size:1.5rem;">${s.icono || "🐾"}</div>
+              <h3 class="h6 fw-bold mb-1">${s.nombre}</h3>
+              <p class="text-muted small mb-2">${s.descripcion}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-semibold text-success">${precioStr}</span>
+                ${duracion ? '<span class="text-muted small">' + duracion + '</span>' : ''}
+              </div>
             </div>
-
-            <div class="flex-grow-1">
-              <h3 class="h5 fw-semibold mb-1">${s.nombre}</h3>
-              <p class="text-muted mb-0">${s.descripcion}</p>
-            </div>
-
           </div>
-        </div>
+        </a>
+      `;
 
-      </a>
-    `;
-
-    cont.appendChild(col);
-  });
-}
+      cont.appendChild(col);
+    });
+  }
 
   function obtenerFiltros() {
     const txt = document.getElementById("txtBuscarServicio")?.value.trim().toLowerCase() || "";
@@ -298,22 +294,18 @@
   }
 
   function initVistaServiciosPorRol(usuario) {
-    const seccionCliente = document.getElementById("seccionCliente");
-    const seccionAdmin = document.getElementById("seccionAdmin");
+    const cards = document.getElementById("cardsServicios");
+    const tbody = document.getElementById("tbodyServicios");
 
-    if (!seccionCliente && !seccionAdmin) return;
-
-    if (usuario.rol === "admin") {
-      if (seccionCliente) seccionCliente.classList.add("d-none");
-      if (seccionAdmin) seccionAdmin.classList.remove("d-none");
-
+    if (cards) {
+      pintarCardsCliente();
+      const servicios = leerServicios().filter((s) => s.estado === "Activo");
+      const empty = document.getElementById("servicios-empty");
+      if (empty) empty.classList.toggle("d-none", servicios.length > 0);
+    }
+    if (tbody) {
       configurarEventosAdmin();
       pintarTablaAdmin();
-    } else {
-      if (seccionAdmin) seccionAdmin.classList.add("d-none");
-      if (seccionCliente) seccionCliente.classList.remove("d-none");
-
-      pintarCardsCliente();
     }
   }
 
@@ -331,8 +323,10 @@
       if (s) {
         const titulo = document.getElementById("tituloFormulario");
         const subt = document.getElementById("subtituloFormulario");
+        const bread = document.getElementById("breadcrumbAccion");
         if (titulo) titulo.textContent = "Editar Servicio";
-        if (subt) subt.textContent = "Cambia lo que ocupes y guarda";
+        if (subt) subt.textContent = "Modifica los datos y guarda";
+        if (bread) bread.textContent = "Editar Servicio";
 
         document.getElementById("nombre").value = s.nombre || "";
         document.getElementById("estado").value = s.estado || "Activo";
@@ -380,13 +374,10 @@
       mostrarExito("alertaServicio", "Listo servicio guardado");
 
       setTimeout(() => {
-        window.location.href = "servicios.html";
+        window.location.href = usuario.rol === "admin" ? "servicios-admin.html" : "servicios.html";
       }, 600);
     });
 
-    if (usuario.rol !== "admin") {
-      mostrarExito("alertaServicio", "Vista de prueba el admin normalmente es quien crea servicios");
-    }
   }
 
   document.addEventListener("DOMContentLoaded", () => {
