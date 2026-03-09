@@ -1,0 +1,2 @@
+-- Veterinaria Patitas - Esquema de base de datos
+-- SC502 - Proyecto Administración Web Cliente/Servidor

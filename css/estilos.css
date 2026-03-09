@@ -1,0 +1,432 @@
+/* Veterinaria Patitas - Estilos consolidados */
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+    color: #2e7d32;
+    font-family: Arial, sans-serif;
+    font-size: 2rem;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.navRegistrarseBtn .btn {
+    padding: 1rem 1.2rem;
+    background-color: #2e7d32;
+    color: white;
+    text-decoration: none;
+    border-radius: 15px;
+}
+
+.navIniciarSesionBtn .btn {
+    padding: 1rem 1.2rem;
+    border: 3px solid #2e7d32;
+    background-color: white;
+    color: black;
+    text-decoration: none;
+    border-radius: 15px;
+}
+
+.nav-buttons .btn:hover {
+    background-color: #1b5e20;
+    color: white;
+}
+
+main {
+    padding: 2rem;
+}
+
+.titulo {
+    text-align: left;
+    color: #000;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.descripcion {
+    text-align: left;
+    color: #6b7280;
+    font-size: 1.40rem;
+    margin-bottom: 2rem;
+}
+
+.agendarCita .btn:hover {
+    background-color: #175da3;
+    color: white;
+}
+
+.navAgendarCitaBtn .btn {
+    padding: 1rem 1.2rem;
+    background-color: #1976D2;
+    color: white;
+    text-decoration: none;
+    border-radius: 15px;
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    background-color: #0a2b4d;
+    color: white;
+    padding: 0.1rem 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Index / Landing - Footer estático */
+.footer-index {
+    background-color: #0a2b4d;
+    color: white;
+}
+
+/* Index - Hero y servicios */
+.btn-agendar-cita {
+    background-color: #2E7D32;
+    border-color: #2E7D32;
+    color: white;
+}
+
+.btn-agendar-cita:hover {
+    background-color: #1b5e20;
+    border-color: #1b5e20;
+    color: white;
+}
+
+.hero-image {
+    border-radius: 1rem;
+}
+
+.servicio-card {
+    background: #F5F5F5;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.servicio-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1) !important;
+}
+
+.servicio-icon {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: rgba(46, 125, 50, 0.15);
+    color: #2E7D32;
+}
+
+.stat-item {
+    padding: 0.5rem 0;
+}
+
+/* Servicios - cards cliente */
+.servicio-card-hover {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.servicio-card-link:hover .servicio-card-hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1) !important;
+}
+
+/* Páginas de autenticación (login / registro)
+   Paleta: Verde Principal #2E7D32, Verde Claro #A5D6A7, Azul Suave #1976D2 */
+.auth-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #2E7D32 0%, #A5D6A7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 420px;
+}
+
+.auth-card {
+    border-radius: 1rem;
+    border: none;
+    background: #FFFFFF;
+}
+
+.auth-header .auth-logo-icon {
+    font-size: 1.5rem;
+}
+
+.auth-title {
+    color: #2E7D32;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.auth-subtitle {
+    font-size: 0.95rem;
+}
+
+.auth-page .btn-primary {
+    background-color: #2E7D32;
+    border-color: #2E7D32;
+    font-weight: 600;
+}
+
+.auth-page .btn-primary:hover {
+    background-color: #1b5e20;
+    border-color: #1b5e20;
+}
+
+.auth-page .form-control:focus {
+    border-color: #A5D6A7;
+    box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.25);
+}
+
+.auth-links a.fw-semibold,
+.auth-links a.text-primary {
+    color: #2E7D32 !important;
+}
+
+.auth-links a.fw-semibold:hover,
+.auth-links a.text-primary:hover {
+    color: #1b5e20 !important;
+}
+
+.auth-page .alert-info {
+    background-color: rgba(25, 118, 210, 0.15);
+    border-color: #1976D2;
+    color: #0d47a1;
+}
+
+.auth-page .alert-danger {
+    background-color: #fef2f2;
+    border-color: #dc2626;
+    color: #991b1b;
+}
+
+.auth-page .alert-success {
+    background-color: #f0fdf4;
+    border-color: #22c55e;
+    color: #166534;
+}
+
+/* 
+   Panel, Clientes, Veterinarios - Navbar y layout
+ */
+.pb-6 {
+    padding-bottom: 5rem;
+}
+
+.navbar-brand.text-success {
+    color: #2E7D32 !important;
+}
+
+.navbar .nav-link.active {
+    color: #2E7D32 !important;
+    font-weight: 600;
+}
+
+.navbar .btn-primary,
+main .btn-primary {
+    background-color: #2E7D32;
+    border-color: #2E7D32;
+}
+
+.navbar .btn-primary:hover,
+main .btn-primary:hover {
+    background-color: #1b5e20;
+    border-color: #1b5e20;
+}
+
+/* 
+   Layout Dashboard - Sidebar + Header (cliente)
+*/
+.app-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.5rem;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+}
+
+.app-header .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #374151;
+    text-decoration: none;
+}
+
+.app-header .brand span.paw { color: #2E7D32; font-size: 1.25rem; }
+
+.app-header .user-area {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.app-header .user-info {
+    text-align: right;
+}
+
+.app-header .user-info .name { font-weight: 600; font-size: 0.9rem; }
+.app-header .user-info .role { font-size: 0.75rem; color: #6b7280; }
+
+.app-header .btn-logout {
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.app-header .btn-logout:hover { color: #2E7D32; }
+
+.app-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.app-sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: #F5F5F5;
+    border-right: 1px solid #e5e7eb;
+    padding: 1rem 0;
+}
+
+.app-sidebar .nav-item {
+    display: block;
+    padding: 0.6rem 1.25rem;
+    color: #374151;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: background 0.15s;
+}
+
+.app-sidebar .nav-item:hover {
+    background: rgba(46, 125, 50, 0.08);
+    color: #2E7D32;
+}
+
+.app-sidebar .nav-item.active {
+    background: rgba(46, 125, 50, 0.15);
+    color: #2E7D32;
+    font-weight: 600;
+}
+
+.app-sidebar .nav-item .icon { font-size: 1.1rem; width: 1.5rem; text-align: center; }
+
+.app-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    background: #fff;
+}
+
+@media (max-width: 991px) {
+    .app-sidebar { display: none; }
+    .sidebar-toggle { display: flex !important; }
+}
+
+.sidebar-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+}
+
+/* Cards de mascota - diseño "Mis Animales" */
+.pet-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.pet-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+.pet-card .pet-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #2E7D32;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.pet-card .pet-detail { display: flex; justify-content: space-between; }
+.pet-card .pet-detail .label { color: #6b7280; }
+.pet-card .pet-detail .value { font-weight: 500; }
+
+.badge-pagado { background-color: #dcfce7; color: #166534; }
+.badge-pendiente { background-color: #fef9c3; color: #854d0e; }
+.badge-cancelado { background-color: #fee2e2; color: #991b1b; }
+
+/* ============================================
+   Admin Layout - Sidebar gris oscuro
+   ============================================ */
+.app-layout.admin-layout .app-sidebar {
+    background: #374151;
+    border-right: 1px solid #4b5563;
+}
+
+.app-layout.admin-layout .app-sidebar .nav-item {
+    color: #d1d5db;
+}
+
+.app-layout.admin-layout .app-sidebar .nav-item:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+}
+
+.app-layout.admin-layout .app-sidebar .nav-item.active {
+    background: rgba(46, 125, 50, 0.4);
+    color: #fff;
+}
+
+.app-layout.admin-layout .app-sidebar .nav-item .icon { opacity: 0.9; }
+
+/* Admin inventario - badges */
+.badge-stock-normal { background-color: #dcfce7; color: #166534; }
+.badge-stock-bajo { background-color: #fef9c3; color: #854d0e; }
+.badge-stock-critico { background-color: #fee2e2; color: #991b1b; }
