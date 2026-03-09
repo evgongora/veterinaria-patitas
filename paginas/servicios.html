@@ -1,21 +1,162 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Servicios - Veterinaria Patitas</title>
-    <link rel="stylesheet" href="../css/estilos.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Servicios | Veterinaria Patitas</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/estilos.css" />
 </head>
+
 <body>
-    <header>
-        <h1>Gestión de Servicios</h1>
-    </header>
-    <main></main>
-    <footer>
-        <div class="footer">
-            <p>SC502 - Proyecto Administración Web Cliente/Servidor</p>
-            <p>&copy; 2026 Veterinaria Patitas. Sistema de Gestión Veterinaria.</p>
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+    <div class="container-fluid px-3">
+      <button class="btn btn-link text-dark me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">
+        <span class="fs-4">≡</span>
+      </button>
+
+      <a class="navbar-brand fw-semibold d-flex align-items-center gap-2" href="panel.html">
+        <span class="fs-5">🐾</span>
+        <span style="color:#2E7D32;">Veterinaria Patitas</span>
+      </a>
+
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <div class="text-end">
+          <div class="fw-semibold small" id="txtNombreUsuario">Usuario</div>
+          <div class="text-muted small" id="txtRolUsuario">Cliente</div>
         </div>
-    </footer>
-    <script src="../js/servicios.js"></script>
+
+        <a href="../index.html" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
+          <span>⎋</span>
+          <span>Cerrar Sesion</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="menuLateral">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Menu</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="list-group">
+        <a class="list-group-item list-group-item-action" href="panel.html">Panel</a>
+        <a class="list-group-item list-group-item-action active" href="servicios.html">Servicios</a>
+        <a class="list-group-item list-group-item-action" href="citas.html">Citas</a>
+        <a class="list-group-item list-group-item-action" href="mascotas.html">Mascotas</a>
+        <a class="list-group-item list-group-item-action" href="facturas.html">Facturas</a>
+        <a class="list-group-item list-group-item-action" href="pagos.html">Pagos</a>
+        <a class="list-group-item list-group-item-action" href="inventario.html">Inventario</a>
+        <a class="list-group-item list-group-item-action" href="evaluacion.html">Evaluacion</a>
+      </div>
+    </div>
+  </div>
+
+  <main class="container py-4">
+
+    <!-- vista cliente -->
+    <section id="seccionCliente">
+        <h1 class="h3 text-center mb-1">Servicios Destacados</h1>
+        <p class="text-center text-muted mb-4">Elige un servicio para agendar tu cita</p>
+
+        <div class="row g-4 justify-content-center" id="cardsServicios">
+            <!-- js llena esto -->
+        </div>
+    </section>
+    <!-- vista admin -->
+    <section id="seccionAdmin" class="d-none">
+      <div class="mb-4">
+        <h1 class="h3 mb-1">Servicios</h1>
+        <p class="text-muted mb-0">Gestion de servicios del sistema</p>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-12 col-md-6">
+          <div class="card shadow-sm border-0">
+            <div class="card-body d-flex justify-content-between align-items-center">
+              <div>
+                <div class="text-muted small">Servicios activos</div>
+                <div class="fs-4 fw-semibold" id="statActivos">0</div>
+              </div>
+              <div class="rounded-3 d-flex align-items-center justify-content-center"
+                   style="width:48px;height:48px;background:#A5D6A7;color:#1B5E20;">
+                ✓
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="card shadow-sm border-0">
+            <div class="card-body d-flex justify-content-between align-items-center">
+              <div>
+                <div class="text-muted small">Servicios inactivos</div>
+                <div class="fs-4 fw-semibold" id="statInactivos">0</div>
+              </div>
+              <div class="rounded-3 d-flex align-items-center justify-content-center"
+                   style="width:48px;height:48px;background:#E5E7EB;color:#374151;">
+                ⏸
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+        <div class="d-flex gap-2">
+          <div class="input-group">
+            <span class="input-group-text">Buscar</span>
+            <input type="text" class="form-control" id="txtBuscarServicio" placeholder="Ej vacuna bano unas" />
+          </div>
+
+          <select class="form-select" id="selEstadoServicio" style="max-width:180px;">
+            <option value="Todos" selected>Todos</option>
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+          </select>
+
+          <button class="btn btn-outline-secondary" id="btnLimpiarFiltros">Limpiar</button>
+        </div>
+
+        <a class="btn btn-success" href="servicio-formulario.html">Nuevo servicio</a>
+      </div>
+
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Nombre</th>
+                  <th class="d-none d-md-table-cell">Descripcion</th>
+                  <th>Precio</th>
+                  <th>Duracion</th>
+                  <th>Estado</th>
+                  <th class="text-end">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyServicios"></tbody>
+            </table>
+          </div>
+
+          <div class="text-muted small mt-3" id="txtResumenServicios"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <footer>
+    <div class="footer">
+      <p>SC502 - Proyecto Administracion Web Cliente Servidor</p>
+      <p>&copy; 2026 Veterinaria Patitas Sistema de Gestion Veterinaria</p>
+    </div>
+  </footer>
+
+  <script src="../js/servicios.js"></script>
 </body>
 </html>
