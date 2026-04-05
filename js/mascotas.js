@@ -56,7 +56,7 @@ function cargarMascotas() {
                 <td>${mascotasHardcoded[i].propietario}</td>
                 <td>
                     <button class="btn btn-sm btn-outline-primary me-2" onclick="editarMascota(${mascotasHardcoded[i].id})">Editar</button>
-                    <a href="cita-formulario.html" class="btn btn-sm btn-success">Agendar cita</a>
+                    <a href="${pageRoute('cita-formulario')}" class="btn btn-sm btn-success">Agendar cita</a>
                 </td>
             </tr>
         `;
@@ -82,7 +82,7 @@ function mostrarCamposGanado() {
 
 function editarMascota(id) {
     sessionStorage.setItem("mascotaEditarId", id);
-    window.location.href = "mascota-formulario.html";
+    window.location.href = pageRoute("mascota-formulario");
 }
 
 function cargarDatosMascotaFormulario() {
@@ -140,7 +140,7 @@ function guardarMascota(event) {
 
     alert("Mascota guardada correctamente.");
     sessionStorage.removeItem("mascotaEditarId");
-    window.location.href = "mascotas.html";
+    window.location.href = pageRoute("mascotas");
 }
 
 document.addEventListener("DOMContentLoaded", function () {

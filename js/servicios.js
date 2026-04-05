@@ -148,7 +148,7 @@
       const duracion = s.duracionMin ? s.duracionMin + " min" : "";
 
       col.innerHTML = `
-        <a class="text-decoration-none text-dark servicio-card-link" href="cita-formulario.html?servicio=${encodeURIComponent(s.id)}">
+        <a class="text-decoration-none text-dark servicio-card-link" href="${pageRoute('cita-formulario', { servicio: s.id })}">
           <div class="card shadow-sm border-0 h-100 servicio-card-hover">
             <div class="card-body p-4">
               <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;background:rgba(46,125,50,0.15);color:#2E7D32;font-size:1.5rem;">${s.icono || "🐾"}</div>
@@ -237,7 +237,7 @@
         <td>${badgeEstado(s.estado)}</td>
         <td class="text-end">
           <a class="btn btn-sm btn-outline-primary"
-             href="servicio-formulario.html?id=${encodeURIComponent(s.id)}">
+             href="${pageRoute('servicio-formulario', { id: s.id })}">
             Editar
           </a>
           <button class="btn btn-sm btn-outline-danger ms-2"
@@ -374,7 +374,7 @@
       mostrarExito("alertaServicio", "Listo servicio guardado");
 
       setTimeout(() => {
-        window.location.href = usuario.rol === "admin" ? "servicios-admin.html" : "servicios.html";
+        window.location.href = usuario.rol === "admin" ? pageRoute("servicios-admin") : pageRoute("servicios");
       }, 600);
     });
 

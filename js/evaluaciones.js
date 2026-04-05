@@ -98,7 +98,7 @@
       form.reset();
 
       setTimeout(() => {
-        window.location.href = "panel.html";
+        window.location.href = pageRoute("panel");
       }, 900);
     });
   }

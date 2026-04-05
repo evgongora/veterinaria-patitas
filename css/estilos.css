@@ -140,7 +140,6 @@ main {
     padding: 0.5rem 0;
 }
 
-/* Servicios - cards cliente */
 .servicio-card-hover {
     transition: transform 0.2s, box-shadow 0.2s;
 }

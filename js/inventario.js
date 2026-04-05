@@ -141,7 +141,7 @@
         <td>${estadoBadge(i.estado)}</td>
         <td class="text-end">
           <a class="btn btn-sm btn-outline-primary"
-             href="inventario-formulario.html?id=${encodeURIComponent(i.id)}">
+             href="${pageRoute('inventario-formulario', { id: i.id })}">
             Editar
           </a>
           <button class="btn btn-sm btn-outline-danger ms-2"
@@ -347,7 +347,7 @@
       mostrarExitoForm("Listo item guardado");
 
       setTimeout(() => {
-        window.location.href = "inventario.html";
+        window.location.href = pageRoute("inventario");
       }, 600);
     });
   }

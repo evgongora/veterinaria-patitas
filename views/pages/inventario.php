@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario - Veterinaria Patitas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <div class="app-layout admin-layout">
+        <header class="app-header">
+            <a href="index.php?r=panel-admin" class="brand"><span class="paw">🐾</span><span>Veterinaria Patitas</span></a>
+            <div class="user-area">
+                <div class="user-info">
+                    <div class="name">Admin Veterinaria</div>
+                    <div class="role">Admin</div>
+                </div>
+                <a href="index.php?r=login" class="btn-logout">→ Cerrar Sesión</a>
+            </div>
+        </header>
+        <div class="app-body">
+            <aside class="app-sidebar">
+                <a href="index.php?r=panel-admin" class="nav-item"><span class="icon">🏠</span> Dashboard</a>
+                <a href="index.php?r=gestion-usuarios" class="nav-item"><span class="icon">👥</span> Gestión de Usuarios</a>
+                <a href="index.php?r=citas-dia" class="nav-item"><span class="icon">📅</span> Citas del Día</a>
+                <a href="index.php?r=servicios-admin" class="nav-item"><span class="icon">🩺</span> Servicios</a>
+                <a href="index.php?r=inventario" class="nav-item active"><span class="icon">📦</span> Inventario</a>
+                <a href="index.php?r=reportes" class="nav-item"><span class="icon">📊</span> Reportes</a>
+            </aside>
+            <main class="app-content">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:56px;height:56px;background:#2E7D32;color:white;font-size:1.5rem;">📦</div>
+                        <div>
+                            <h1 class="h3 fw-bold mb-1">Inventario</h1>
+                            <p class="text-muted mb-0">Gestión de medicamentos y suministros</p>
+                        </div>
+                    </div>
+                    <a href="index.php?r=inventario-formulario" class="btn btn-success">+ Agregar Medicamento</a>
+                </div>
+
+                <div class="alert alert-warning d-flex align-items-center gap-2 mb-4" role="alert">
+                    <span>⚠️</span>
+                    <span>Atención: 3 medicamentos con stock bajo o crítico. Se recomienda realizar pedido de reposición.</span>
+                </div>
+
+                <section class="row g-3 mb-4">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <p class="text-muted small mb-1">Total Items</p>
+                                <h2 class="h4 fw-bold mb-0">6</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <p class="text-muted small mb-1">Stock Normal</p>
+                                <h2 class="h4 fw-bold text-success mb-0">3</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <p class="text-muted small mb-1">Stock Bajo</p>
+                                <h2 class="h4 fw-bold text-warning mb-0">2</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <p class="text-muted small mb-1">Stock Crítico</p>
+                                <h2 class="h4 fw-bold text-danger mb-0">1</h2>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Medicamento</th>
+                                        <th>Cantidad</th>
+                                        <th>Vencimiento</th>
+                                        <th>Proveedor</th>
+                                        <th>Estado</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-semibold">Amoxicilina 500mg</td>
+                                        <td>45</td>
+                                        <td>15 Sep 2026</td>
+                                        <td>FarmaVet S.A.</td>
+                                        <td><span class="badge badge-stock-normal rounded-pill">Stock Normal</span></td>
+                                        <td class="text-end"><a href="index.php?r=inventario-formulario&id=1" class="btn btn-sm btn-link p-0 me-1">✏️</a><button type="button" class="btn btn-sm btn-link p-0 text-danger">🗑️</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-semibold">Vacuna Antirrábica</td>
+                                        <td>12</td>
+                                        <td>30 Ago 2026</td>
+                                        <td>BioVet Labs</td>
+                                        <td><span class="badge badge-stock-bajo rounded-pill">Stock Bajo</span></td>
+                                        <td class="text-end"><a href="index.php?r=inventario-formulario&id=2" class="btn btn-sm btn-link p-0 me-1">✏️</a><button type="button" class="btn btn-sm btn-link p-0 text-danger">🗑️</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-semibold">Desparasitante Canino</td>
+                                        <td>78</td>
+                                        <td>20 Dic 2026</td>
+                                        <td>PetMed Corp</td>
+                                        <td><span class="badge badge-stock-normal rounded-pill">Stock Normal</span></td>
+                                        <td class="text-end"><a href="index.php?r=inventario-formulario&id=3" class="btn btn-sm btn-link p-0 me-1">✏️</a><button type="button" class="btn btn-sm btn-link p-0 text-danger">🗑️</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-semibold">Antiinflamatorio</td>
+                                        <td>5</td>
+                                        <td>10 May 2026</td>
+                                        <td>FarmaVet S.A.</td>
+                                        <td><span class="badge badge-stock-critico rounded-pill">Stock Crítico</span></td>
+                                        <td class="text-end"><a href="index.php?r=inventario-formulario&id=4" class="btn btn-sm btn-link p-0 me-1">✏️</a><button type="button" class="btn btn-sm btn-link p-0 text-danger">🗑️</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-semibold">Antibiótico Tópico</td>
+                                        <td>23</td>
+                                        <td>5 Jul 2026</td>
+                                        <td>MediPet Inc</td>
+                                        <td><span class="badge badge-stock-normal rounded-pill">Stock Normal</span></td>
+                                        <td class="text-end"><a href="index.php?r=inventario-formulario&id=5" class="btn btn-sm btn-link p-0 me-1">✏️</a><button type="button" class="btn btn-sm btn-link p-0 text-danger">🗑️</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-semibold">Suplemento Vitamínico</td>
+                                        <td>8</td>
+                                        <td>15 Jun 2026</td>
+                                        <td>NutriVet</td>
+                                        <td><span class="badge badge-stock-bajo rounded-pill">Stock Bajo</span></td>
+                                        <td class="text-end"><a href="index.php?r=inventario-formulario&id=6" class="btn btn-sm btn-link p-0 me-1">✏️</a><button type="button" class="btn btn-sm btn-link p-0 text-danger">🗑️</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/rutas.js"></script>
+</body>
+</html>

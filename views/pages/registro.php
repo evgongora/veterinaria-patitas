@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Veterinaria Patitas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body class="auth-page">
+    <main class="auth-container">
+        <section class="auth-card card shadow-lg">
+            <div class="card-body p-4 p-md-5">
+                <header class="auth-header mb-4">
+                    <div class="logo-group d-flex align-items-center gap-2 mb-2">
+                        <span class="auth-logo-icon" aria-hidden="true">🐾</span>
+                        <h1 class="auth-title mb-0">Veterinaria Patitas</h1>
+                    </div>
+                    <p class="auth-subtitle text-muted mb-0">Crea tu cuenta</p>
+                </header>
+
+                <div id="registro-alert" class="alert d-none" role="alert"></div>
+
+                <form id="registro-form" novalidate>
+                    <div class="form-group mb-3">
+                        <label for="registro-nombre" class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" id="registro-nombre" required>
+                        <div id="registro-nombre-error" class="invalid-feedback" role="alert"></div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="registro-cedula" class="form-label">Cédula</label>
+                        <input type="text" class="form-control" id="registro-cedula" required>
+                        <div id="registro-cedula-error" class="invalid-feedback" role="alert"></div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="registro-telefono" class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control" id="registro-telefono" required>
+                        <div id="registro-telefono-error" class="invalid-feedback" role="alert"></div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="registro-email" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="registro-email" required>
+                        <div id="registro-email-error" class="invalid-feedback" role="alert"></div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="registro-password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="registro-password" required>
+                        <div id="registro-password-error" class="invalid-feedback" role="alert"></div>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="registro-password-confirm" class="form-label">Confirmar Contraseña</label>
+                        <input type="password" class="form-control" id="registro-password-confirm" required>
+                        <div id="registro-password-confirm-error" class="invalid-feedback" role="alert"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-3 mb-3">
+                        Registrarse
+                    </button>
+                </form>
+
+                <nav class="auth-links text-center" aria-label="Enlaces de autenticación">
+                    <p class="mb-2 small">
+                        ¿Ya tienes cuenta?
+                        <a href="index.php?r=login" class="text-decoration-none fw-semibold">Iniciar sesión</a>
+                    </p>
+                    <a href="index.php?r=home" class="d-inline-flex align-items-center gap-1 text-secondary small">
+                        ← Volver al inicio
+                    </a>
+                </nav>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/rutas.js?v=2"></script>
+    <script src="js/validaciones.js?v=2"></script>
+    <script src="js/autenticacion.js?v=2"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => Auth.initRegistro());
+    </script>
+</body>
+</html>

@@ -202,7 +202,7 @@
         <td>${formatearColones(f.total)}</td>
         <td>${badgeEstadoFactura(f.estado)}</td>
         <td class="text-end">
-          <a class="btn btn-sm btn-outline-primary" href="factura-detalle.html?id=${encodeURIComponent(f.id)}">
+          <a class="btn btn-sm btn-outline-primary" href="${pageRoute('factura-detalle', { id: f.id })}">
             Ver detalle
           </a>
         </td>
@@ -363,7 +363,7 @@
     document.getElementById("txtResumenTotal").textContent = formatearColones(total);
 
     const btnPagos = document.getElementById("btnIrPagos");
-    if (btnPagos) btnPagos.href = `pagos.html?factura=${encodeURIComponent(factura.id)}`;
+    if (btnPagos) btnPagos.href = pageRoute('pagos', { factura: factura.id });
   }
 
   document.addEventListener("DOMContentLoaded", pintarDetalleFactura);
@@ -523,7 +523,7 @@
       tr.innerHTML = `
         <td class="fw-semibold">${p.id}</td>
         <td>
-          <a class="text-decoration-none" href="factura-detalle.html?id=${encodeURIComponent(p.facturaId)}">
+          <a class="text-decoration-none" href="${pageRoute('factura-detalle', { id: p.facturaId })}">
             ${p.facturaId}
           </a>
         </td>
