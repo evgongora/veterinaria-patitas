@@ -4,6 +4,19 @@
  * Preparado para integrar PHP en la siguiente entrega
  */
 
+/**
+ * URL absoluta al front controller (index.php?r=...).
+ * Definida aquí para no depender de rutas.js ni de caché antigua con .html
+ */
+function authRedirect(route) {
+  const rel = 'index.php?r=' + encodeURIComponent(route);
+  try {
+    return new URL(rel, window.location.href).href;
+  } catch (e) {
+    return rel;
+  }
+}
+
 const Auth = {
   /** Credenciales demo hardcoded */
   CREDENCIALES: {
@@ -52,7 +65,7 @@ const Auth = {
         const esAdmin = email === 'admin@patitas.com';
         const usuario = { nombre: esAdmin ? 'Admin Veterinaria' : 'Juan Pérez', rol: esAdmin ? 'admin' : 'cliente', email };
         try { localStorage.setItem('usuarioActivo', JSON.stringify(usuario)); } catch (e) {}
-        window.location.href = esAdmin ? 'panel-admin.html' : 'panel.html';
+        window.location.href = esAdmin ? authRedirect('panel-admin') : authRedirect('panel');
       } else {
         this.mostrarAlerta(alertEl, 'Correo o contraseña incorrectos. Intenta de nuevo.', 'danger');
       }
@@ -101,7 +114,7 @@ const Auth = {
 
       this.mostrarAlerta(alertEl, 'Registro exitoso. Redirigiendo al inicio de sesión...', 'success');
       setTimeout(() => {
-        window.location.href = 'login.html';
+        window.location.href = authRedirect('login');
       }, 1500);
     });
   },

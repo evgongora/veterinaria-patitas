@@ -22,7 +22,7 @@ const Veterinarios = {
         <td>${v.especialidad}</td>
         <td>${v.telefono}</td>
         <td class="text-end">
-          <a href="veterinario-formulario.html?id=${v.id}" class="btn btn-warning btn-sm">Editar</a>
+          <a href="${pageRoute('veterinario-formulario', { id: v.id })}" class="btn btn-warning btn-sm">Editar</a>
         </td>
       </tr>`
     ).join('');

@@ -23,7 +23,7 @@ const Clientes = {
         <td>${c.telefono}</td>
         <td>${c.email}</td>
         <td class="text-end">
-          <a href="cliente-formulario.html?id=${c.id}" class="btn btn-warning btn-sm">Editar</a>
+          <a href="${pageRoute('cliente-formulario', { id: c.id })}" class="btn btn-warning btn-sm">Editar</a>
         </td>
       </tr>`
     ).join('');

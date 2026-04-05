@@ -56,7 +56,7 @@ function cargarCitas() {
                 <td>${citasHardcoded[i].horaInicio} - ${citasHardcoded[i].horaFin}</td>
                 <td>${citasHardcoded[i].tipo}</td>
                 <td><span class="${obtenerClaseEstado(citasHardcoded[i].estado)}">${citasHardcoded[i].estado}</span></td>
-                <td><a href="cita-formulario.html" class="btn btn-sm btn-primary">Ver / Editar</a></td>
+                <td><a href="${pageRoute('cita-formulario')}" class="btn btn-sm btn-primary">Ver / Editar</a></td>
             </tr>
         `;
     }
@@ -116,7 +116,7 @@ function guardarCita(event) {
     };
 
     sessionStorage.setItem("citaActual", JSON.stringify(cita));
-    window.location.href = "cita-confirmacion.html";
+    window.location.href = pageRoute("cita-confirmacion");
 }
 
 function mostrarResumenCita() {
