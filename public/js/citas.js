@@ -37,20 +37,25 @@ function cargarCitas() {
   var tbody = document.getElementById("tablaCitas");
   if (!tbody || typeof apiGetJson !== "function") return;
 
+  var esStaffLista = !!document.querySelector(".app-layout.admin-layout");
+
   citasAlertaOcultar("alertCitasLista");
 
-  apiGetJson("api/citas.php")
+  apiGetJson(patitasApi("citas"))
     .then(function (data) {
       if (!data || !data.ok) {
         var msg =
           (data && data.error) ||
-          "No se pudieron cargar las citas. Inicia sesión como cliente.";
+          (esStaffLista
+            ? "No se pudieron cargar las citas."
+            : "No se pudieron cargar las citas. Inicia sesión como cliente.");
         citasAlertaMostrar("alertCitasLista", msg, "warning");
         tbody.innerHTML =
           '<tr><td colspan="7" class="text-muted">Sin datos</td></tr>';
         return;
       }
       var citas = data.citas || [];
+      var esStaff = esStaffLista;
       if (citas.length === 0) {
         tbody.innerHTML =
           '<tr><td colspan="7" class="text-muted">No hay citas registradas</td></tr>';
@@ -58,6 +63,13 @@ function cargarCitas() {
       }
       tbody.innerHTML = citas
         .map(function (c) {
+          var celdaAccion = esStaff
+            ? '<td class="text-end text-muted small">#' + (c.id != null ? c.id : "—") + "</td>"
+            : '<td class="text-end text-nowrap"><a href="' +
+              pageRoute("cita-formulario", { id: c.id }) +
+              '" class="btn btn-sm btn-outline-success me-1">Editar</a><a href="' +
+              pageRoute("cita-formulario") +
+              '" class="btn btn-sm btn-primary">Nueva</a></td>';
           return (
             "<tr>" +
             "<td>" +
@@ -82,9 +94,7 @@ function cargarCitas() {
             "\">" +
             (c.estado || "") +
             "</span></td>" +
-            "<td><a href=\"" +
-            pageRoute("cita-formulario") +
-            "\" class=\"btn btn-sm btn-primary\">Nueva</a></td>" +
+            celdaAccion +
             "</tr>"
           );
         })
@@ -103,9 +113,9 @@ function cargarCitas() {
 
 function llenarSelectAnimales() {
   var selectAnimal = document.getElementById("animal");
-  if (!selectAnimal || typeof apiGetJson !== "function") return;
+  if (!selectAnimal || typeof apiGetJson !== "function") return Promise.resolve();
 
-  apiGetJson("api/animales.php").then(function (data) {
+  return apiGetJson(patitasApi("animales")).then(function (data) {
     if (!data || !data.ok) return;
     var list = data.animales || [];
     var opts = '<option value="">Seleccione un animal</option>';
@@ -125,9 +135,9 @@ function llenarSelectAnimales() {
 
 function llenarSelectVeterinarios() {
   var sel = document.getElementById("veterinario");
-  if (!sel || typeof apiGetJson !== "function") return;
+  if (!sel || typeof apiGetJson !== "function") return Promise.resolve();
 
-  apiGetJson("api/veterinarios.php").then(function (data) {
+  return apiGetJson(patitasApi("veterinarios")).then(function (data) {
     if (!data || !data.ok) return;
     var list = data.veterinarios || [];
     var opts = '<option value="">Seleccione un veterinario</option>';
@@ -145,9 +155,9 @@ function llenarSelectVeterinarios() {
 
 function llenarTiposCita() {
   var sel = document.getElementById("tipoCita");
-  if (!sel || typeof apiGetJson !== "function") return;
+  if (!sel || typeof apiGetJson !== "function") return Promise.resolve();
 
-  apiGetJson("api/tipos-cita.php").then(function (data) {
+  return apiGetJson(patitasApi("tipos-cita")).then(function (data) {
     if (!data || !data.ok) return;
     var list = data.tipos || [];
     sel.innerHTML = list
@@ -206,9 +216,20 @@ function guardarCita(event) {
     notas: motivo ? motivo.value.trim() : "",
   };
 
-  apiPostJson("api/citas.php", body)
+  var hidCita = document.getElementById("citaId");
+  var editId = hidCita && hidCita.value ? parseInt(hidCita.value, 10) : 0;
+  var req =
+    editId > 0
+      ? apiPutJson(patitasApi("citas"), Object.assign({ citaId: editId }, body))
+      : apiPostJson(patitasApi("citas"), body);
+
+  req
     .then(function (data) {
       if (data && data.ok) {
+        if (editId > 0) {
+          window.location.href = pageRoute("citas");
+          return;
+        }
         sessionStorage.setItem(
           "citaActual",
           JSON.stringify({
@@ -222,7 +243,7 @@ function guardarCita(event) {
       }
       citasAlertaMostrar(
         "alertCita",
-        (data && data.error) || "No se pudo agendar la cita.",
+        (data && data.error) || (editId > 0 ? "No se pudo guardar la cita." : "No se pudo agendar la cita."),
         "danger"
       );
     })
@@ -263,15 +284,148 @@ function mostrarResumenCita() {
     "</dl></div>";
 }
 
+function aplicarHoraSeleccionada(valor) {
+  var v = String(valor || "");
+  document.querySelectorAll(".horario-btn").forEach(function (b) {
+    var inp = b.querySelector('input[name="hora"]');
+    if (inp && inp.disabled) {
+      b.classList.remove("active", "btn-primary");
+      return;
+    }
+    b.classList.remove("active", "btn-primary");
+    if (inp) {
+      inp.checked = inp.value === v;
+      if (inp.checked) {
+        b.classList.add("active", "btn-primary");
+      }
+    }
+  });
+}
+
+function exceptCitaIdParaOcupadas() {
+  var hid = document.getElementById("citaId");
+  if (hid && hid.value) {
+    var n = parseInt(hid.value, 10);
+    if (n > 0) return n;
+  }
+  var params = new URLSearchParams(window.location.search);
+  return parseInt(params.get("id") || "0", 10) || 0;
+}
+
+function bloquearTodosLosHorarios(mensaje) {
+  document.querySelectorAll(".horario-btn").forEach(function (b) {
+    var inp = b.querySelector('input[name="hora"]');
+    if (!inp) return;
+    inp.disabled = true;
+    inp.checked = false;
+    b.classList.add("disabled", "text-muted");
+    b.classList.remove("active", "btn-primary");
+    b.style.opacity = "0.6";
+    b.title = mensaje;
+  });
+}
+
+function refrescarHorariosOcupados() {
+  var fecha = document.getElementById("fecha");
+  var vet = document.getElementById("veterinario");
+  if (!fecha || !vet || typeof apiGetJson !== "function") return Promise.resolve();
+  var fe = fecha.value;
+  var vid = parseInt(vet.value, 10);
+
+  if (!fe) {
+    bloquearTodosLosHorarios("Elige primero la fecha");
+    return Promise.resolve();
+  }
+  if (vid <= 0) {
+    bloquearTodosLosHorarios("Elige veterinario: cada profesional tiene su propia agenda");
+    return Promise.resolve();
+  }
+
+  var ex = exceptCitaIdParaOcupadas();
+  var q = { ocupadas: 1, fecha: fe, veterinarioId: vid };
+  if (ex > 0) q.exceptCitaId = ex;
+  return apiGetJson(patitasApi("citas", q))
+    .then(function (data) {
+      var ocup = (data && data.ok && data.horasOcupadas) || [];
+      document.querySelectorAll(".horario-btn").forEach(function (b) {
+        var inp = b.querySelector('input[name="hora"]');
+        if (!inp) return;
+        var h = inp.value;
+        var bloqueada = ocup.indexOf(h) !== -1;
+        inp.disabled = bloqueada;
+        if (bloqueada) {
+          b.classList.add("disabled", "text-muted");
+          b.classList.remove("active", "btn-primary");
+          b.style.opacity = "0.55";
+          b.title = "Ocupado con el veterinario seleccionado (otro doctor puede tener este hueco libre)";
+          inp.checked = false;
+        } else {
+          b.classList.remove("disabled", "text-muted");
+          b.style.opacity = "";
+          b.removeAttribute("title");
+          inp.disabled = false;
+        }
+      });
+    })
+    .catch(function () {
+      bloquearTodosLosHorarios("No se pudo consultar la agenda de este veterinario. Intenta de nuevo.");
+    });
+}
+
+function precargarCitaEdicion() {
+  var params = new URLSearchParams(window.location.search);
+  var editId = parseInt(params.get("id") || "0", 10);
+  if (editId <= 0 || typeof apiGetJson !== "function") return Promise.resolve(null);
+
+  return apiGetJson(patitasApi("citas", { citaId: editId })).then(function (data) {
+    if (!data || !data.ok || !data.cita) {
+      citasAlertaMostrar("alertCita", (data && data.error) || "No se pudo cargar la cita.", "danger");
+      return null;
+    }
+    var ci = data.cita;
+    var animal = document.getElementById("animal");
+    var veterinario = document.getElementById("veterinario");
+    var tipoCita = document.getElementById("tipoCita");
+    var fecha = document.getElementById("fecha");
+    var motivo = document.getElementById("motivo");
+    if (animal) animal.value = String(ci.animalId || "");
+    if (veterinario) veterinario.value = String(ci.veterinarioId || "");
+    if (tipoCita) tipoCita.value = String(ci.tipoCitaId || "1");
+    if (fecha) fecha.value = ci.fecha || "";
+    if (motivo) motivo.value = ci.notas || "";
+    aplicarHoraSeleccionada(ci.horaInicio || "");
+    if (ci.estadoId !== 3) {
+      citasAlertaMostrar(
+        "alertCita",
+        "Esta cita ya no está pendiente; los cambios están desactivados. Para otros ajustes, contacta a la clínica.",
+        "warning"
+      );
+      var btn = document.getElementById("btnSubmitCita");
+      if (btn) btn.disabled = true;
+    }
+    return ci;
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   if (document.getElementById("tablaCitas")) {
     cargarCitas();
   }
 
   if (document.getElementById("animal")) {
-    llenarSelectAnimales();
-    llenarSelectVeterinarios();
-    llenarTiposCita();
+    Promise.all([llenarSelectAnimales(), llenarSelectVeterinarios(), llenarTiposCita()])
+      .then(function () {
+        return precargarCitaEdicion();
+      })
+      .then(function (ci) {
+        return refrescarHorariosOcupados().then(function () {
+          if (ci && ci.horaInicio) aplicarHoraSeleccionada(ci.horaInicio);
+        });
+      });
+    var fe = document.getElementById("fecha");
+    var ve = document.getElementById("veterinario");
+    if (fe) fe.addEventListener("change", function () { refrescarHorariosOcupados(); });
+    if (ve) ve.addEventListener("change", function () { refrescarHorariosOcupados(); });
   }
 
   if (document.getElementById("resumenCita")) {
@@ -284,9 +438,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   document.querySelectorAll(".horario-btn").forEach(function (btn) {
-    btn.addEventListener("click", function () {
+    btn.addEventListener("click", function (ev) {
+      var inp0 = btn.querySelector('input[name="hora"]');
+      if (inp0 && inp0.disabled) {
+        ev.preventDefault();
+        return;
+      }
       citasAlertaOcultar("alertCita");
       document.querySelectorAll(".horario-btn").forEach(function (b) {
+        var i = b.querySelector('input[name="hora"]');
+        if (i && i.disabled) return;
         b.classList.remove("active", "btn-primary");
       });
       btn.classList.add("active", "btn-primary");

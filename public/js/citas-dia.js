@@ -1,5 +1,5 @@
 /**
- * Citas del día (staff) — filtra api/citas.php por fecha local
+ * Citas del día (staff) — route=citas
  */
 (function () {
   function fechaLocalYmd() {
@@ -60,16 +60,16 @@
     tbody.innerHTML =
       '<tr><td colspan="6" class="text-center py-4"><span class="spinner-border spinner-border-sm text-success me-2"></span>Cargando citas…</td></tr>';
 
-    apiGetJson("api/citas.php")
+    apiGetJson(patitasApi("citas", { soloHoy: 1 }))
       .then((data) => {
         if (!data || !data.ok) {
           tbody.innerHTML =
-            '<tr><td colspan="6" class="text-danger">No se pudieron cargar las citas. ¿Iniciaste sesión como administrador?</td></tr>';
+            '<tr><td colspan="6" class="text-danger">No se pudieron cargar las citas. ¿Iniciaste sesión como staff?</td></tr>';
           return;
         }
         const citas = data.citas || [];
-        const hoyList = citas.filter((c) => String(c.fecha).slice(0, 10) === hoy);
-        pintar(hoyList, hoy);
+        const hoyRef = (data.fechaReferencia || hoy).slice(0, 10);
+        pintar(citas, hoyRef);
       })
       .catch(() => {
         tbody.innerHTML =

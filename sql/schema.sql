@@ -200,7 +200,7 @@ CREATE TABLE MEDICAMENTO (
 
 -- =====================================================
 -- INSERTS — datos demo alineados con sql/seed_datos_demo.sql
--- CONTRASENA: bcrypt $2y$ coste 10 (PASSWORD_BCRYPT). api/auth.php usa password_verify.
+-- CONTRASENA: bcrypt $2y$ coste 10 (PASSWORD_BCRYPT). AuthController vía api.php usa password_verify.
 -- Texto plano que debe escribir el usuario en el login:
 --   admin 1234 · vets vet123 · cliente@patitas.com 123456 · cliente02–10 cliente123
 -- ROL = 3 filas (dominio). Resto de tablas de catálogo: 10 filas donde aplica.
@@ -217,6 +217,7 @@ INSERT INTO ESTADO VALUES (7, 'Pagado');
 INSERT INTO ESTADO VALUES (8, 'No Pagado');
 INSERT INTO ESTADO VALUES (9, 'En Tratamiento');
 INSERT INTO ESTADO VALUES (10, 'Dado de Baja');
+INSERT INTO ESTADO VALUES (11, 'Confirmada');
 
 -- ROL (3)
 INSERT INTO ROL VALUES (1, 'Administrador');

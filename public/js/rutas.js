@@ -64,8 +64,17 @@ function patitasInitSessionHeader() {
 
   if (nameEl && u.nombre) nameEl.textContent = u.nombre;
   if (roleEl) {
-    if (u.rol === "admin") {
-      roleEl.textContent = isAdminLayout ? "Equipo clínico" : "Admin";
+    var rfLocal = u.rolFk != null ? Number(u.rolFk) : null;
+    if (rfLocal === 3 || u.rol === "cliente") {
+      roleEl.textContent = "Cliente";
+    } else if (isAdminLayout) {
+      roleEl.textContent = "Equipo clínico";
+    } else if (rfLocal === 1) {
+      roleEl.textContent = "Administrador";
+    } else if (rfLocal === 2) {
+      roleEl.textContent = "Veterinario";
+    } else if (u.rol === "admin") {
+      roleEl.textContent = "Equipo clínico";
     } else {
       roleEl.textContent = "Cliente";
     }
@@ -74,15 +83,27 @@ function patitasInitSessionHeader() {
 
   if (typeof apiGetJson !== "function") return;
 
-  apiGetJson("api/auth.php")
+  apiGetJson(patitasApi("auth"))
     .then(function (d) {
       if (!d || !d.ok || !d.usuario) return;
       var usr = d.usuario;
       if (nameEl) nameEl.textContent = usr.nombre;
       avatar.textContent = patitasInicialesSesion(usr.nombre, usr.email);
       if (roleEl) {
-        roleEl.textContent =
-          usr.rol === "admin" ? (isAdminLayout ? "Equipo clínico" : "Admin") : "Cliente";
+        var rf = usr.rolFk != null ? Number(usr.rolFk) : null;
+        if (rf === 3 || usr.rol === "cliente") {
+          roleEl.textContent = "Cliente";
+        } else if (isAdminLayout) {
+          roleEl.textContent = "Equipo clínico";
+        } else if (rf === 1) {
+          roleEl.textContent = "Administrador";
+        } else if (rf === 2) {
+          roleEl.textContent = "Veterinario";
+        } else if (usr.rol === "admin") {
+          roleEl.textContent = "Equipo clínico";
+        } else {
+          roleEl.textContent = "Cliente";
+        }
       }
       try {
         var merged = Object.assign({}, u, usr);
@@ -99,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll("a.btn-logout").forEach(function (a) {
     a.addEventListener('click', function (e) {
       e.preventDefault();
-      var url = (typeof apiUrl === 'function') ? apiUrl('api/logout.php') : new URL('api/logout.php', window.location.href).href;
+      var url = (typeof patitasApi === 'function') ? apiUrl(patitasApi('logout')) : apiUrl('api.php?route=logout');
       fetch(url, {
         method: 'POST',
         credentials: 'same-origin',

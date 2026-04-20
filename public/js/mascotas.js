@@ -29,7 +29,7 @@ function cargarMascotas() {
   var cont = document.getElementById("contenedor-mascotas");
   if (!cont || typeof apiGetJson !== "function") return;
 
-  apiGetJson("api/animales.php")
+  apiGetJson(patitasApi("animales"))
     .then(function (data) {
       if (!data || !data.ok) {
         cont.innerHTML =
@@ -94,7 +94,7 @@ function cargarRazasSelect() {
   var sel = document.getElementById("razaId");
   if (!sel || typeof apiGetJson !== "function") return;
 
-  apiGetJson("api/razas.php").then(function (data) {
+  apiGetJson(patitasApi("razas")).then(function (data) {
     if (!data || !data.ok) return;
     var razas = data.razas || [];
     sel.innerHTML =
@@ -122,7 +122,7 @@ function cargarMascotaFormulario() {
 
   if (typeof apiGetJson !== "function") return;
 
-  apiGetJson("api/animales.php").then(function (data) {
+  apiGetJson(patitasApi("animales")).then(function (data) {
     if (!data || !data.ok) return;
     var m = (data.animales || []).find(function (x) {
       return String(x.id) === String(id);
@@ -184,7 +184,7 @@ function guardarMascota(event) {
   var editId = params.get("id");
   if (editId) body.animalId = parseInt(editId, 10);
 
-  apiPostJson("api/animales.php", body)
+  apiPostJson(patitasApi("animales"), body)
     .then(function (data) {
       if (data && data.ok) {
         var msg = editId

@@ -35,7 +35,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="public/js/confirm-modal.js?v=2"></script>
-    <script src="public/js/api.js?v=2"></script>
+    <script src="public/js/api.js?v=3"></script>
     <script src="public/js/rutas.js?v=2"></script>
     <script src="public/js/inventario.js?v=4"></script>
 </body>

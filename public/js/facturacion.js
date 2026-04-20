@@ -1,5 +1,5 @@
 /**
- * Facturas y pagos — api/facturas.php y api/pagos.php
+ * Facturas y pagos — routes facturas / pagos
  */
 (function () {
   function leerUsuarioActivo() {
@@ -73,7 +73,7 @@
     const usuario = leerUsuarioActivo();
     pintarTextosPorRol(usuario);
 
-    apiGetJson("api/facturas.php")
+    apiGetJson(patitasApi("facturas"))
       .then((data) => {
         if (!data || !data.ok) {
           tbody.innerHTML = `<tr><td colspan="7" class="text-danger">Error al cargar facturas</td></tr>`;
@@ -142,7 +142,7 @@
       return;
     }
 
-    apiGetJson("api/facturas.php?id=" + encodeURIComponent(id))
+    apiGetJson(patitasApi("facturas", { id: id }))
       .then((data) => {
         if (!data || !data.ok || !data.factura) {
           const cont = document.getElementById("alertaDetalleFactura");
@@ -209,7 +209,8 @@
     let res = [...lista];
     if (filtros.txt) {
       res = res.filter((p) => {
-        const todo = `${p.id} ${p.facturaId} ${p.metodo} ${p.estado}`.toLowerCase();
+        const mail = (p.clienteEmail || "").toLowerCase();
+        const todo = `${p.id} ${p.facturaId} ${p.metodo} ${p.estado} ${mail}`.toLowerCase();
         return todo.includes(filtros.txt);
       });
     }
@@ -219,73 +220,211 @@
     return res;
   }
 
+  function setPagosColumnaClienteVisible(esStaff) {
+    document.querySelectorAll(".patitas-col-pago-cliente").forEach((el) => {
+      el.classList.add("d-none");
+      if (esStaff) el.classList.add("d-lg-table-cell");
+      else el.classList.remove("d-lg-table-cell");
+    });
+  }
+
+  function poblarSelectCitasCobro(selCita, selMetodo, citas, metodos) {
+    if (!selCita) return;
+    selCita.innerHTML = "";
+    const opt0 = document.createElement("option");
+    opt0.value = "";
+    opt0.textContent = citas.length ? "Seleccione una cita" : "No hay citas pendientes de cobro";
+    selCita.appendChild(opt0);
+    citas.forEach((c) => {
+      const opt = document.createElement("option");
+      opt.value = String(c.citaId);
+      opt.textContent = `${c.fecha} ${c.horaInicio} — ${c.animal} (${c.cliente})`;
+      selCita.appendChild(opt);
+    });
+    if (selMetodo) {
+      selMetodo.innerHTML = "";
+      const om = document.createElement("option");
+      om.value = "";
+      om.textContent = "Seleccione";
+      selMetodo.appendChild(om);
+      (metodos || []).forEach((m) => {
+        const o = document.createElement("option");
+        o.value = String(m.id);
+        o.textContent = m.nombre;
+        selMetodo.appendChild(o);
+      });
+    }
+  }
+
+  function initRegistrarPagoStaff(recargarPagos) {
+    const selCita = document.getElementById("selCitaCobro");
+    if (!selCita || typeof apiGetJson !== "function" || typeof apiPostJson !== "function") return;
+
+    let citasData = [];
+    const selMetodo = document.getElementById("selMetodoPagoRegistro");
+    const detalle = document.getElementById("txtDetalleCitaCobro");
+    const numMonto = document.getElementById("numMontoPago");
+
+    function refrescarCitasCobro() {
+      return apiGetJson(patitasApi("pagos", { citasCobro: 1 })).then((data) => {
+        if (!data || !data.ok) {
+          selCita.innerHTML = "";
+          const o = document.createElement("option");
+          o.value = "";
+          o.textContent = "Error al cargar citas";
+          selCita.appendChild(o);
+          return;
+        }
+        citasData = data.citas || [];
+        poblarSelectCitasCobro(selCita, selMetodo, citasData, data.metodos || []);
+        if (detalle) detalle.textContent = "";
+        if (numMonto) numMonto.value = "";
+      });
+    }
+
+    refrescarCitasCobro();
+
+    selCita.addEventListener("change", () => {
+      const id = selCita.value;
+      const c = citasData.find((x) => String(x.citaId) === id);
+      if (!c) {
+        if (detalle) detalle.textContent = "";
+        return;
+      }
+      const sug = Number(c.totalSugerido || 0);
+      if (detalle) {
+        let t = c.tieneFactura && c.facturaId ? `Factura ${c.facturaId}. ` : "";
+        t +=
+          sug > 0
+            ? `Total sugerido: ₡${sug.toLocaleString("es-CR")}.`
+            : "Indique el monto cobrado (sin servicios registrados en la cita).";
+        detalle.textContent = t;
+      }
+      if (numMonto) numMonto.value = sug > 0 ? String(Math.round(sug)) : "";
+    });
+
+    const btn = document.getElementById("btnRegistrarPago");
+    const alertEl = document.getElementById("alertRegistrarPago");
+    if (!btn) return;
+
+    btn.addEventListener("click", () => {
+      if (alertEl) alertEl.innerHTML = "";
+      const citaId = parseInt(selCita.value, 10);
+      const metodoPagoId = parseInt(selMetodo?.value || "0", 10);
+      const monto = parseFloat(numMonto?.value || "0");
+      if (!citaId || !metodoPagoId || !(monto > 0)) {
+        if (alertEl)
+          alertEl.innerHTML = '<div class="alert alert-warning mb-0">Complete cita, método y monto.</div>';
+        return;
+      }
+      btn.disabled = true;
+      apiPostJson(patitasApi("pagos"), { citaId, metodoPagoId, monto })
+        .then((r) => {
+          btn.disabled = false;
+          if (!r || !r.ok) {
+            if (alertEl)
+              alertEl.innerHTML = `<div class="alert alert-danger mb-0">${(r && r.error) || "Error"}</div>`;
+            return;
+          }
+          if (alertEl) {
+            alertEl.innerHTML = `<div class="alert alert-success mb-0">Pago <strong>${r.pagoId}</strong> registrado (${r.facturaId}).</div>`;
+          }
+          selCita.value = "";
+          if (numMonto) numMonto.value = "";
+          if (detalle) detalle.textContent = "";
+          recargarPagos();
+          refrescarCitasCobro();
+        })
+        .catch(() => {
+          btn.disabled = false;
+          if (alertEl) alertEl.innerHTML = '<div class="alert alert-danger mb-0">Error de red</div>';
+        });
+    });
+  }
+
   function initPagos() {
     const tbody = document.getElementById("tbodyPagos");
     if (!tbody || typeof apiGetJson !== "function") return;
 
-    const usuario = leerUsuarioActivo();
+    const esStaff = typeof window !== "undefined" && window.patitasPagosModo === "staff";
+    const colCount = esStaff ? 7 : 6;
+    setPagosColumnaClienteVisible(esStaff);
+
     const titulo = document.getElementById("tituloPagos");
-    if (titulo) {
-      titulo.textContent = usuario.rol === "admin" ? "Pagos" : "Mis pagos";
-    }
+    if (titulo) titulo.textContent = esStaff ? "Pagos" : "Mis pagos";
 
     const facturaParam = getParam("factura");
 
-    apiGetJson("api/pagos.php")
-      .then((data) => {
-        if (!data || !data.ok) {
-          tbody.innerHTML = `<tr><td colspan="6" class="text-danger">Error</td></tr>`;
-          return;
-        }
-        let pagos = data.pagos || [];
-        if (facturaParam) {
-          pagos = pagos.filter((p) => p.facturaId === facturaParam);
-        }
+    let pagosCache = [];
 
-        function pintar() {
-          const filtros = obtenerFiltrosPagos();
-          const filtrados = aplicarFiltrosPagos(pagos, filtros);
-          const resumen = document.getElementById("txtResumenPagos");
-          tbody.innerHTML = "";
-          if (filtrados.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="text-muted">No hay pagos</td></tr>`;
-            if (resumen) resumen.textContent = "Mostrando 0 pagos";
-            return;
-          }
-          filtrados.forEach((p) => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
+    function enlazarFiltros(pintar) {
+      const txt = document.getElementById("txtBuscarPago");
+      const sel = document.getElementById("selEstadoPago");
+      const btn = document.getElementById("btnLimpiarFiltrosPago");
+      if (txt) txt.addEventListener("input", pintar);
+      if (sel) sel.addEventListener("change", pintar);
+      if (btn) {
+        btn.addEventListener("click", () => {
+          if (txt) txt.value = "";
+          if (sel) sel.value = "Todos";
+          pintar();
+        });
+      }
+    }
+
+    function pintar() {
+      const filtros = obtenerFiltrosPagos();
+      let pagos = [...pagosCache];
+      if (facturaParam) pagos = pagos.filter((p) => p.facturaId === facturaParam);
+      const filtrados = aplicarFiltrosPagos(pagos, filtros);
+      const resumen = document.getElementById("txtResumenPagos");
+      tbody.innerHTML = "";
+      if (filtrados.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="${colCount}" class="text-muted">No hay pagos</td></tr>`;
+        if (resumen) resumen.textContent = "Mostrando 0 pagos";
+        return;
+      }
+      filtrados.forEach((p) => {
+        const tr = document.createElement("tr");
+        const mail = p.clienteEmail || "—";
+        const colCliente = esStaff
+          ? `<td class="patitas-col-pago-cliente d-none d-lg-table-cell small text-break">${mail}</td>`
+          : "";
+        tr.innerHTML = `
               <td class="fw-semibold">${p.id}</td>
               <td><a class="text-decoration-none" href="${pageRoute("factura-detalle", { id: p.facturaId })}">${p.facturaId}</a></td>
+              ${colCliente}
               <td>${p.fecha}</td>
               <td>${formatearColones(p.monto)}</td>
               <td>${p.metodo}</td>
               <td>${badgeEstadoPago(p.estado)}</td>`;
-            tbody.appendChild(tr);
-          });
-          if (resumen) resumen.textContent = `Mostrando ${filtrados.length} pago(s)`;
-        }
-
-        const txt = document.getElementById("txtBuscarPago");
-        const sel = document.getElementById("selEstadoPago");
-        const btn = document.getElementById("btnLimpiarFiltrosPago");
-        if (txt) txt.addEventListener("input", pintar);
-        if (sel) sel.addEventListener("change", pintar);
-        if (btn) {
-          btn.addEventListener("click", () => {
-            if (txt) txt.value = "";
-            if (sel) sel.value = "Todos";
-            pintar();
-          });
-        }
-        pintar();
-      })
-      .catch(() => {
-        tbody.innerHTML = `<tr><td colspan="6" class="text-danger">Error de conexión</td></tr>`;
+        tbody.appendChild(tr);
       });
+      if (resumen) resumen.textContent = `Mostrando ${filtrados.length} pago(s)`;
+    }
+
+    function cargarLista() {
+      apiGetJson(patitasApi("pagos"))
+        .then((data) => {
+          if (!data || !data.ok) {
+            const msg = (data && data.error) || "Error al cargar pagos";
+            tbody.innerHTML = `<tr><td colspan="${colCount}" class="text-danger">${msg}</td></tr>`;
+            return;
+          }
+          pagosCache = data.pagos || [];
+          pintar();
+        })
+        .catch(() => {
+          tbody.innerHTML = `<tr><td colspan="${colCount}" class="text-danger">Error de conexión</td></tr>`;
+        });
+    }
+
+    enlazarFiltros(pintar);
+    cargarLista();
+    if (esStaff) initRegistrarPagoStaff(cargarLista);
 
     const ayuda = document.getElementById("txtAyudaPago");
-    if (ayuda && facturaParam) ayuda.textContent = "Factura: " + facturaParam;
+    if (ayuda && facturaParam) ayuda.textContent = "Filtrado por factura: " + facturaParam;
   }
 
   document.addEventListener("DOMContentLoaded", () => {

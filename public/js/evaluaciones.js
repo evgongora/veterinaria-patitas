@@ -203,7 +203,7 @@
         if (!id || typeof apiDeleteJson !== "function") return;
 
         const ejecutarBorrado = function () {
-          apiDeleteJson("api/evaluaciones.php?id=" + encodeURIComponent(String(id))).then(function (data) {
+          apiDeleteJson(patitasApi("evaluaciones", { id: id })).then(function (data) {
             if (data && data.ok) {
               mostrarAlerta("ok", "Evaluación eliminada.");
               cargarDatos();
@@ -241,7 +241,7 @@
 
   function cargarDatos() {
     if (typeof apiGetJson !== "function") return;
-    apiGetJson("api/evaluaciones.php").then(function (data) {
+    apiGetJson(patitasApi("evaluaciones")).then(function (data) {
       if (!data || !data.ok) {
         mostrarAlerta("bad", (data && data.error) || "No se pudieron cargar las evaluaciones.");
         return;
@@ -306,8 +306,8 @@
         const payload = { rating: rating, comentario: comentario };
         const prom =
           evalId !== ""
-            ? apiPutJson("api/evaluaciones.php", Object.assign({ id: parseInt(evalId, 10) }, payload))
-            : apiPostJson("api/evaluaciones.php", payload);
+            ? apiPutJson(patitasApi("evaluaciones"), Object.assign({ id: parseInt(evalId, 10) }, payload))
+            : apiPostJson(patitasApi("evaluaciones"), payload);
 
         prom.then(function (data) {
           if (data && data.ok) {

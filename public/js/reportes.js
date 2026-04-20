@@ -1,5 +1,5 @@
 /**
- * Reportes — métricas desde api/dashboard.php (vista staff)
+ * Reportes — route=dashboard (staff)
  */
 (function () {
   function formatearColones(n) {
@@ -11,7 +11,7 @@
     const grid = document.getElementById("reportes-grid");
     if (!grid || typeof apiGetJson !== "function") return;
 
-    apiGetJson("api/dashboard.php")
+    apiGetJson(patitasApi("dashboard"))
       .then((data) => {
         if (!data || !data.ok) {
           if (alerta)

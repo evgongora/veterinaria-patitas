@@ -1,5 +1,5 @@
 /**
- * Inventario — api/inventario.php (administrador y veterinario)
+ * Inventario — route=inventario
  */
 (function () {
   let cacheItems = [];
@@ -117,7 +117,7 @@
         if (!idNum || typeof apiDeleteJson !== "function") return;
 
         const ejecutar = function () {
-          apiDeleteJson("api/inventario.php?idNum=" + encodeURIComponent(String(idNum))).then((data) => {
+          apiDeleteJson(patitasApi("inventario", { idNum: idNum })).then((data) => {
             if (data && data.ok) {
               cargarDesdeApi().then(() => pintarTabla(esStaffUser));
             } else {
@@ -173,7 +173,7 @@
 
   function cargarDesdeApi() {
     if (typeof apiGetJson !== "function") return Promise.resolve();
-    return apiGetJson("api/inventario.php").then((data) => {
+    return apiGetJson(patitasApi("inventario")).then((data) => {
       if (data && data.ok && Array.isArray(data.items)) {
         cacheItems = data.items;
       } else {
@@ -241,8 +241,8 @@
 
     function cargarTiposYItem() {
       const urlTipos = esEdicion
-        ? "api/inventario.php?id=" + encodeURIComponent(editId)
-        : "api/inventario.php?tipos=1";
+        ? patitasApi("inventario", { id: editId })
+        : patitasApi("inventario", { tipos: 1 });
       return apiGetJson(urlTipos).then((data) => {
         if (!data || !data.ok) return;
         if (Array.isArray(data.tipos)) llenarSelectTipos(selTipo, data.tipos, esEdicion && data.item ? data.item.tipoId : null);
@@ -280,8 +280,8 @@
       const body = { nombre, cantidad, tipoId };
       const prom =
         esEdicion && idNum > 0
-          ? apiPutJson("api/inventario.php", Object.assign({ idNum }, body))
-          : apiPostJson("api/inventario.php", body);
+          ? apiPutJson(patitasApi("inventario"), Object.assign({ idNum }, body))
+          : apiPostJson(patitasApi("inventario"), body);
 
       prom
         .then(function (data) {

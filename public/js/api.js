@@ -1,5 +1,6 @@
 /**
  * Cliente AJAX — base URL relativa al sitio (misma carpeta que index.php)
+ * API MVC: api.php?route=nombre (& demás query params)
  */
 (function (global) {
   function apiUrl(path) {
@@ -12,8 +13,28 @@
   }
 
   /**
+   * Construye URL del front controller JSON (api.php).
+   * @param {string} route ej. 'auth', 'citas', 'tipos-cita'
+   * @param {Record<string, string|number>|undefined} params query adicional (id, animalId, …)
+   * @returns {string}
+   */
+  function patitasApi(route, params) {
+    const p = new URLSearchParams();
+    p.set("route", route);
+    if (params && typeof params === "object") {
+      Object.keys(params).forEach(function (k) {
+        if (k === "route") return;
+        if (params[k] !== undefined && params[k] !== null) {
+          p.set(k, String(params[k]));
+        }
+      });
+    }
+    return "api.php?" + p.toString();
+  }
+
+  /**
    * POST JSON
-   * @param {string} path ej. 'api/auth.php'
+   * @param {string} path URL completa o resultado de patitasApi()
    * @param {object} body
    * @returns {Promise<any>}
    */
@@ -80,6 +101,7 @@
   }
 
   global.apiUrl = apiUrl;
+  global.patitasApi = patitasApi;
   global.apiPostJson = apiPostJson;
   global.apiGetJson = apiGetJson;
   global.apiPutJson = apiPutJson;

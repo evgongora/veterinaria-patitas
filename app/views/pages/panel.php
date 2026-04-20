@@ -63,7 +63,7 @@
                                 <div class="card-body text-center py-4">
                                     <div class="patitas-icon-circle" aria-hidden="true"><i class="bi bi-receipt-cutoff"></i></div>
                                     <h3 class="h6 fw-bold mb-1">Mis facturas</h3>
-                                    <p class="small text-muted mb-0">Revisar pagos</p>
+                                    <p class="small text-muted mb-0">Facturas y pagos de tus citas</p>
                                 </div>
                             </a>
                         </div>
@@ -89,8 +89,8 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="public/js/api.js?v=2"></script>
+    <script src="public/js/api.js?v=3"></script>
     <script src="public/js/rutas.js?v=2"></script>
-    <script src="public/js/panel.js?v=2"></script>
+    <script src="public/js/panel.js?v=3"></script>
 </body>
 </html>

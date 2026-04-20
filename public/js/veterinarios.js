@@ -1,5 +1,5 @@
 /**
- * Veterinaria Patitas - Veterinarios (api/veterinarios.php)
+ * Veterinaria Patitas - Veterinarios (route=veterinarios)
  */
 
 function patitasVeterinariosEsAdmin() {
@@ -19,7 +19,7 @@ const Veterinarios = {
 
     const pintar = (esAdmin) => {
       if (btnNuevo) btnNuevo.classList.toggle('d-none', !esAdmin);
-      apiGetJson('api/veterinarios.php')
+      apiGetJson(patitasApi('veterinarios'))
         .then((data) => {
           if (!data || !data.ok) {
             tbody.innerHTML = '<tr><td colspan="5" class="text-danger">Error al cargar</td></tr>';
@@ -48,7 +48,7 @@ const Veterinarios = {
         });
     };
 
-    apiGetJson('api/auth.php')
+    apiGetJson(patitasApi('auth'))
       .then((d) => {
         const esAdmin = d && d.ok && d.usuario && Number(d.usuario.rolFk) === 1;
         try {
@@ -78,7 +78,7 @@ const Veterinarios = {
       if (titulo) titulo.textContent = 'Editar veterinario';
       if (bread) bread.textContent = 'Editar veterinario';
       if (pwdHint) pwdHint.textContent = 'Dejar vacío para no cambiar la contraseña.';
-      apiGetJson('api/veterinarios.php?id=' + encodeURIComponent(editId)).then((data) => {
+      apiGetJson(patitasApi('veterinarios', { id: editId })).then((data) => {
         if (!data || !data.ok || !data.veterinario) {
           if (alertEl) {
             Veterinarios.mostrarAlerta(alertEl, (data && data.error) || 'No se pudo cargar el veterinario.', 'danger');
@@ -154,10 +154,10 @@ const Veterinarios = {
         let data;
         if (editId) {
           body.veterinarioId = parseInt(editId, 10);
-          data = await apiPutJson('api/veterinarios.php', body);
+          data = await apiPutJson(patitasApi('veterinarios'), body);
         } else {
           body.password = password;
-          data = await apiPostJson('api/veterinarios.php', body);
+          data = await apiPostJson(patitasApi('veterinarios'), body);
         }
         if (data && data.ok) {
           Veterinarios.mostrarAlerta(alertEl, editId ? 'Veterinario actualizado correctamente.' : 'Veterinario creado correctamente.', 'success');
@@ -185,7 +185,7 @@ const Veterinarios = {
       return;
     }
 
-    apiGetJson('api/auth.php')
+    apiGetJson(patitasApi('auth'))
       .then((d) => {
         if (d && d.ok && d.usuario) {
           try {

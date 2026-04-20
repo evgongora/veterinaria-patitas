@@ -203,7 +203,7 @@
     loadClientes() {
       const tbody = document.querySelector("#tabla-gu-clientes tbody");
       if (!tbody || typeof apiGetJson !== "function") return;
-      apiGetJson("api/clientes.php").then((data) => {
+      apiGetJson(patitasApi("clientes")).then((data) => {
         if (!data || !data.ok) {
           tbody.innerHTML =
             '<tr><td colspan="5" class="text-danger">Sin permiso o error al cargar</td></tr>';
@@ -223,7 +223,7 @@
             <td>${escapeHtml(c.telefono || "—")}</td>
             <td>${escapeHtml(c.email || "—")}</td>
             <td class="text-end">
-              <button type="button" class="btn btn-warning btn-sm btn-gu-edit-cliente" data-id="${c.id}">Editar</button>
+              <button type="button" class="btn btn-sm btn-outline-primary btn-gu-edit-cliente" data-id="${c.id}">Editar</button>
             </td>
           </tr>`
           )
@@ -240,7 +240,7 @@
 
     cargarClienteEdit(id) {
       if (!id || typeof apiGetJson !== "function") return;
-      apiGetJson("api/clientes.php?id=" + encodeURIComponent(id)).then((data) => {
+      apiGetJson(patitasApi("clientes", { id: id })).then((data) => {
         if (!data || !data.ok || !data.cliente) {
           showAlert(document.getElementById("gu-alert-cliente"), (data && data.error) || "No se pudo cargar.", "danger");
           return;
@@ -264,7 +264,7 @@
     loadVeterinarios() {
       const tbody = document.querySelector("#tabla-gu-veterinarios tbody");
       if (!tbody || typeof apiGetJson !== "function") return;
-      apiGetJson("api/veterinarios.php").then((data) => {
+      apiGetJson(patitasApi("veterinarios")).then((data) => {
         if (!data || !data.ok) {
           tbody.innerHTML = '<tr><td colspan="5" class="text-danger">Error al cargar</td></tr>';
           return;
@@ -283,7 +283,7 @@
             <td>${escapeHtml(v.especialidad || "—")}</td>
             <td>${escapeHtml(v.telefono || "—")}</td>
             <td class="text-end">
-              <button type="button" class="btn btn-warning btn-sm btn-gu-edit-vet" data-id="${v.id}">Editar</button>
+              <button type="button" class="btn btn-sm btn-outline-primary btn-gu-edit-vet" data-id="${v.id}">Editar</button>
             </td>
           </tr>`
           )
@@ -299,7 +299,7 @@
 
     cargarVetEdit(id) {
       if (!id || typeof apiGetJson !== "function") return;
-      apiGetJson("api/veterinarios.php?id=" + encodeURIComponent(id)).then((data) => {
+      apiGetJson(patitasApi("veterinarios", { id: id })).then((data) => {
         if (!data || !data.ok || !data.veterinario) {
           showAlert(document.getElementById("gu-alert-vet"), (data && data.error) || "No se pudo cargar.", "danger");
           return;
@@ -366,10 +366,10 @@
         let data;
         if (editId) {
           body.clienteId = parseInt(editId, 10);
-          data = await apiPutJson("api/clientes.php", body);
+          data = await apiPutJson(patitasApi("clientes"), body);
         } else {
           body.password = password;
-          data = await apiPostJson("api/clientes.php", body);
+          data = await apiPostJson(patitasApi("clientes"), body);
         }
         if (data && data.ok) {
           showAlert(alertEl, editId ? "Cliente actualizado." : "Cliente creado.", "success");
@@ -430,10 +430,10 @@
         let data;
         if (editId) {
           body.veterinarioId = parseInt(editId, 10);
-          data = await apiPutJson("api/veterinarios.php", body);
+          data = await apiPutJson(patitasApi("veterinarios"), body);
         } else {
           body.password = password;
-          data = await apiPostJson("api/veterinarios.php", body);
+          data = await apiPostJson(patitasApi("veterinarios"), body);
         }
         if (data && data.ok) {
           showAlert(alertEl, editId ? "Veterinario actualizado." : "Veterinario creado.", "success");

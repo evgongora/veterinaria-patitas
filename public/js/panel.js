@@ -1,5 +1,5 @@
 /**
- * Panel cliente — datos desde api/dashboard.php
+ * Panel cliente — api.php?route=dashboard
  */
 document.addEventListener('DOMContentLoaded', function () {
   var fk = document.getElementById('patitasFechaHoy');
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (typeof apiGetJson !== 'function') return;
 
-  apiGetJson('api/dashboard.php').then(function (data) {
+  apiGetJson(patitasApi('dashboard')).then(function (data) {
     if (!data || !data.ok || data.vista !== 'cliente') return;
 
     var mascotas = data.mascotasPreview || [];
@@ -76,8 +76,13 @@ document.addEventListener('DOMContentLoaded', function () {
         citas.forEach(function (c) {
           var col = document.createElement('div');
           col.className = 'col-12 col-md-6';
-          var hi = String(c.HORA_DE_INICIO || c.hora_inicio || '').substring(0, 5);
-          var fd = c.FECHA || c.fecha || '';
+          var hi = String(c.horaInicio || c.HORA_DE_INICIO || c.hora_inicio || '').substring(0, 5);
+          var fd = c.fecha || c.FECHA || '';
+          var cid = c.id != null ? c.id : '';
+          var editUrl =
+            typeof pageRoute === 'function' && cid !== ''
+              ? pageRoute('cita-formulario', { id: cid })
+              : 'index.php?r=cita-formulario&id=' + encodeURIComponent(cid);
           col.innerHTML =
             '<div class="card border-0 shadow-sm">' +
             '<div class="card-body d-flex align-items-center gap-3">' +
@@ -85,8 +90,14 @@ document.addEventListener('DOMContentLoaded', function () {
             '<div class="flex-grow-1">' +
             '<strong>' + (c.mascota || '') + '</strong>' +
             '<p class="mb-0 small text-muted">' + hi + ' · ' + (c.veterinario || '') + '</p>' +
+            (c.tipo ? '<p class="mb-0 small text-muted">' + c.tipo + ' · ' + (c.estado || '') + '</p>' : '') +
             '</div>' +
-            '<span class="text-muted small">' + fd + '</span>' +
+            '<div class="text-end">' +
+            '<span class="text-muted small d-block">' + fd + '</span>' +
+            (cid !== ''
+              ? '<a href="' + editUrl + '" class="btn btn-sm btn-outline-success mt-2">Editar</a>'
+              : '') +
+            '</div>' +
             '</div></div>';
           contC.appendChild(col);
         });

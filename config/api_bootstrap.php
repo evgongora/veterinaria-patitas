@@ -1,6 +1,6 @@
 <?php
 /**
- * Inicialización común para endpoints API (JSON + sesión)
+ * Inicialización JSON API — sesión, autoload, helpers (sin carpeta api/).
  */
 
 declare(strict_types=1);
@@ -9,8 +9,20 @@ if (! defined('ROOT_PATH')) {
     define('ROOT_PATH', dirname(__DIR__) . '/app');
 }
 
-require_once dirname(__DIR__) . '/config/config.php';
-require_once dirname(__DIR__) . '/config/database.php';
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/database.php';
+
+spl_autoload_register(static function (string $class): void {
+    $base = dirname(__DIR__) . '/app';
+    foreach (['/models/', '/controllers/'] as $dir) {
+        $file = $base . $dir . $class . '.php';
+        if (is_file($file)) {
+            require_once $file;
+
+            return;
+        }
+    }
+});
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -18,12 +30,8 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 
 header('Content-Type: application/json; charset=utf-8');
 
-/** Evita caché de respuestas API en desarrollo */
 header('Cache-Control: no-store, no-cache, must-revalidate');
 
-/**
- * @param array<string, mixed> $data
- */
 function api_json(array $data, int $httpCode = 200): void
 {
     http_response_code($httpCode);
@@ -39,9 +47,6 @@ function api_require_method(string ...$methods): void
     }
 }
 
-/**
- * @return array<string, mixed>
- */
 function api_json_body(): array
 {
     $raw = file_get_contents('php://input') ?: '';
@@ -50,6 +55,7 @@ function api_json_body(): array
     }
     try {
         $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+
         return is_array($decoded) ? $decoded : [];
     } catch (Throwable $e) {
         api_json(['ok' => false, 'error' => 'JSON inválido'], 400);
@@ -99,7 +105,6 @@ function api_require_staff(): void
     }
 }
 
-/** Solo administrador (ROL 1). Veterinarios (2) no pasan. */
 function api_require_admin(): void
 {
     if (api_rol_fk() !== 1) {
@@ -121,6 +126,19 @@ function api_cliente_id(PDO $pdo): ?int
         return null;
     }
     $st = $pdo->prepare('SELECT CLIENTE_ID_PK FROM CLIENTE WHERE USUARIO_ID_FK = ? LIMIT 1');
+    $st->execute([$uid]);
+    $v = $st->fetchColumn();
+
+    return $v !== false ? (int) $v : null;
+}
+
+function api_veterinario_id(PDO $pdo): ?int
+{
+    $uid = api_session_user_id();
+    if ($uid === null) {
+        return null;
+    }
+    $st = $pdo->prepare('SELECT VETERINARIO_ID_PK FROM VETERINARIO WHERE USUARIO_ID_FK = ? LIMIT 1');
     $st->execute([$uid]);
     $v = $st->fetchColumn();
 

@@ -3,10 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Conexión PDO para la API (mysqli legacy opcional).
- *
- * Docker (servicio `web` + `db`): por defecto host=db, puerto=3306.
- * MySQL en el host (mapeo 3307:3306): export DB_HOST=127.0.0.1 DB_PORT=3307
+ * Conexión PDO para la 
  */
 class Database
 {

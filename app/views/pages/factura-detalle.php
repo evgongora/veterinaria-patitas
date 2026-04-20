@@ -1,4 +1,7 @@
-<?php /* Vista factura-detalle — MVC */ ?>
+<?php
+declare(strict_types=1);
+/* Vista factura-detalle — MVC */
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -18,7 +21,7 @@
                     <h1 class="h3 fw-bold mb-0">Detalle de factura</h1>
                     <div class="d-flex gap-2">
                         <a class="btn btn-outline-secondary" href="index.php?r=facturas">Volver</a>
-                        <a class="btn btn-primary" id="btnIrPagos" href="index.php?r=pagos">Ir a pagos</a>
+                        <a class="btn btn-primary" id="btnIrPagos" href="index.php?r=pagos"><?php echo patitas_es_staff() ? 'Ver pagos (clínica)' : 'Ver mis pagos'; ?></a>
                     </div>
                 </div>
 
@@ -91,7 +94,11 @@
                                 </div>
                                 <hr>
                                 <div class="small text-muted">
-                                    Si el estado está pendiente, revisa la factura y el módulo de pagos para el registro correspondiente.
+                                    <?php if (patitas_es_staff()) : ?>
+                                    Si el estado está pendiente, revisa el registro de pagos vinculado a esta factura.
+                                    <?php else : ?>
+                                    Si el estado está pendiente, el personal de la clínica registrará el pago cuando corresponda.
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -101,8 +108,8 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="public/js/api.js?v=2"></script>
+    <script src="public/js/api.js?v=3"></script>
     <script src="public/js/rutas.js?v=2"></script>
-    <script src="public/js/facturacion.js?v=2"></script>
+    <script src="public/js/facturacion.js?v=4"></script>
 </body>
 </html>

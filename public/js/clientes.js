@@ -1,5 +1,5 @@
 /**
- * Veterinaria Patitas - Gestión de clientes (api/clientes.php)
+ * Veterinaria Patitas - Gestión de clientes (route=clientes)
  */
 
 const Clientes = {
@@ -7,7 +7,7 @@ const Clientes = {
     const tbody = document.querySelector('#tabla-clientes tbody');
     if (!tbody || typeof apiGetJson !== 'function') return;
 
-    apiGetJson('api/clientes.php')
+    apiGetJson(patitasApi('clientes'))
       .then((data) => {
         if (!data || !data.ok) {
           tbody.innerHTML = '<tr><td colspan="5" class="text-danger">Sin permiso o error al cargar</td></tr>';
@@ -51,7 +51,7 @@ const Clientes = {
       if (titulo) titulo.textContent = 'Editar cliente';
       if (bread) bread.textContent = 'Editar cliente';
       if (pwdHint) pwdHint.textContent = 'Dejar vacío para no cambiar la contraseña.';
-      apiGetJson('api/clientes.php?id=' + encodeURIComponent(editId)).then((data) => {
+      apiGetJson(patitasApi('clientes', { id: editId })).then((data) => {
         if (!data || !data.ok || !data.cliente) {
           if (alertEl) {
             Clientes.mostrarAlerta(alertEl, (data && data.error) || 'No se pudo cargar el cliente.', 'danger');
@@ -123,10 +123,10 @@ const Clientes = {
         let data;
         if (editId) {
           body.clienteId = parseInt(editId, 10);
-          data = await apiPutJson('api/clientes.php', body);
+          data = await apiPutJson(patitasApi('clientes'), body);
         } else {
           body.password = password;
-          data = await apiPostJson('api/clientes.php', body);
+          data = await apiPostJson(patitasApi('clientes'), body);
         }
         if (data && data.ok) {
           Clientes.mostrarAlerta(alertEl, editId ? 'Cliente actualizado correctamente.' : 'Cliente creado correctamente.', 'success');

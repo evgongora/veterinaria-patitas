@@ -75,7 +75,7 @@
                             <div class="card-body p-4 text-center text-md-start">
                                 <div class="servicio-icon rounded-circle mb-3 mx-auto mx-md-0 d-inline-flex align-items-center justify-content-center"><i class="bi bi-receipt-cutoff" aria-hidden="true"></i></div>
                                 <h3 class="h5 fw-bold text-dark mb-2">Facturación clara</h3>
-                                <p class="text-muted small mb-0">Revisa facturas y pagos asociados a tus citas, con estados actualizados.</p>
+                                <p class="text-muted small mb-0">Revisa facturas y pagos asociados a tus citas.</p>
                             </div>
                         </div>
                     </div>

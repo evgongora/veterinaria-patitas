@@ -1,5 +1,5 @@
 /**
- * Panel administración — métricas api/dashboard.php
+ * Panel administración — route=dashboard
  */
 document.addEventListener('DOMContentLoaded', function () {
   var fa = document.getElementById('patitasFechaHoyAdmin');
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (typeof apiGetJson !== 'function') return;
 
-  apiGetJson('api/dashboard.php').then(function (data) {
+  apiGetJson(patitasApi('dashboard')).then(function (data) {
     if (!data || !data.ok || data.vista !== 'staff') return;
 
     var s = data.stats || {};

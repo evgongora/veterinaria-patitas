@@ -1,6 +1,6 @@
 /**
  * Veterinaria Patitas - Autenticación
- * Login: POST api/auth.php | Registro: POST api/registro.php
+ * Login / registro vía api.php?route=…
  */
 
 function authRedirect(route) {
@@ -13,6 +13,22 @@ function authRedirect(route) {
 }
 
 const Auth = {
+  bindPasswordToggle(buttonId, inputId) {
+    const btn = document.getElementById(buttonId);
+    const input = document.getElementById(inputId);
+    if (!btn || !input) return;
+    const icon = btn.querySelector('i');
+    btn.addEventListener('click', () => {
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      btn.setAttribute('aria-pressed', isHidden ? 'true' : 'false');
+      btn.setAttribute('aria-label', isHidden ? 'Ocultar contraseña' : 'Mostrar contraseña');
+      if (icon) {
+        icon.className = isHidden ? 'bi bi-eye-slash' : 'bi bi-eye';
+      }
+    });
+  },
+
   initLogin() {
     const form = document.getElementById('login-form');
     const alertEl = document.getElementById('login-alert');
@@ -21,15 +37,18 @@ const Auth = {
 
     if (!form) return;
 
+    this.bindPasswordToggle('login-password-toggle', 'login-password');
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       this.ocultarAlerta(alertEl);
 
       const email = (emailInput.value || '').trim().toLowerCase();
-      const password = (passwordInput.value || '').trim();
+      const password = passwordInput.value || '';
 
       const emailVal = Validaciones.email(email);
       const passwordVal = Validaciones.requerido(password, 'La contraseña');
+      const passMax = Validaciones.longitudMaxima(password, 200, 'La contraseña');
 
       let hayError = false;
 
@@ -43,6 +62,9 @@ const Auth = {
       if (!passwordVal.valido) {
         this.mostrarErrorCampo(passwordInput, passwordVal.mensaje);
         hayError = true;
+      } else if (!passMax.valido) {
+        this.mostrarErrorCampo(passwordInput, passMax.mensaje);
+        hayError = true;
       } else {
         this.limpiarErrorCampo(passwordInput);
       }
@@ -55,7 +77,7 @@ const Auth = {
       }
 
       try {
-        const data = await apiPostJson('api/auth.php', { email, password });
+        const data = await apiPostJson(patitasApi('auth'), { email, password });
         if (data && data.ok && data.usuario) {
           const u = data.usuario;
           const usuario = {
@@ -85,29 +107,42 @@ const Auth = {
 
     if (!form) return;
 
+    this.bindPasswordToggle('registro-password-toggle', 'registro-password');
+    this.bindPasswordToggle('registro-password-confirm-toggle', 'registro-password-confirm');
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       this.ocultarAlerta(alertEl);
 
+      const emailNorm = (document.getElementById('registro-email').value || '').trim().toLowerCase();
       const datos = {
         nombre: document.getElementById('registro-nombre').value?.trim(),
         cedula: document.getElementById('registro-cedula').value?.trim(),
         telefono: document.getElementById('registro-telefono').value?.trim(),
-        email: document.getElementById('registro-email').value?.trim(),
+        email: emailNorm,
         password: document.getElementById('registro-password').value,
         passwordConfirm: document.getElementById('registro-password-confirm').value,
       };
 
+      const passMin = Validaciones.longitudMinima(datos.password, 4);
+      const passMax = Validaciones.longitudMaxima(datos.password, 200, 'La contraseña');
+
       const campos = [
-        { id: 'registro-nombre', val: Validaciones.requerido(datos.nombre, 'Nombre completo') },
-        { id: 'registro-cedula', val: Validaciones.requerido(datos.cedula, 'Cédula') },
-        { id: 'registro-telefono', val: Validaciones.requerido(datos.telefono, 'Teléfono') },
+        { id: 'registro-nombre', val: Validaciones.nombreCompleto(datos.nombre) },
+        { id: 'registro-cedula', val: Validaciones.cedulaCostaRica(datos.cedula) },
+        { id: 'registro-telefono', val: Validaciones.telefonoCostaRica(datos.telefono) },
         { id: 'registro-email', val: Validaciones.email(datos.email) },
-        { id: 'registro-password', val: Validaciones.longitudMinima(datos.password, 4) },
+        {
+          id: 'registro-password',
+          val:
+            passMin.valido && passMax.valido
+              ? { valido: true, mensaje: '' }
+              : { valido: false, mensaje: passMin.valido ? passMax.mensaje : passMin.mensaje }
+        },
         {
           id: 'registro-password-confirm',
-          val: Validaciones.contraseñasIguales(datos.password, datos.passwordConfirm),
-        },
+          val: Validaciones.contraseñasIguales(datos.password, datos.passwordConfirm)
+        }
       ];
 
       let hayError = false;
@@ -128,12 +163,15 @@ const Auth = {
       }
 
       try {
-        const data = await apiPostJson('api/registro.php', {
-          nombre: datos.nombre,
+        const telDigits = (datos.telefono || '').replace(/\D/g, '');
+        const telefonoEnvio = telDigits.startsWith('506') && telDigits.length > 8 ? telDigits.slice(3) : telDigits;
+
+        const data = await apiPostJson(patitasApi('registro'), {
+          nombre: datos.nombre.replace(/\s+/g, ' ').trim(),
           email: datos.email,
           password: datos.password,
-          telefono: datos.telefono,
-          cedula: datos.cedula,
+          telefono: telefonoEnvio,
+          cedula: datos.cedula.replace(/\D/g, ''),
         });
         if (data && data.ok) {
           this.mostrarAlerta(alertEl, data.mensaje || 'Cuenta creada. Redirigiendo al inicio de sesión…', 'success');
@@ -165,14 +203,25 @@ const Auth = {
   mostrarErrorCampo(input, mensaje) {
     if (!input) return;
     input.classList.add('is-invalid');
-    const errorEl = document.getElementById(`${input.id}-error`);
-    if (errorEl) errorEl.textContent = mensaje;
+    input.setAttribute('aria-invalid', 'true');
+    const errId = `${input.id}-error`;
+    const errorEl = document.getElementById(errId);
+    if (errorEl) {
+      errorEl.textContent = mensaje;
+      errorEl.classList.add('d-block');
+      input.setAttribute('aria-describedby', errId);
+    }
   },
 
   limpiarErrorCampo(input) {
     if (!input) return;
     input.classList.remove('is-invalid');
+    input.removeAttribute('aria-invalid');
+    input.removeAttribute('aria-describedby');
     const errorEl = document.getElementById(`${input.id}-error`);
-    if (errorEl) errorEl.textContent = '';
+    if (errorEl) {
+      errorEl.textContent = '';
+      errorEl.classList.remove('d-block');
+    }
   },
 };

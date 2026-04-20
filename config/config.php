@@ -49,3 +49,13 @@ function asset(string $path): string
     }
     return $p;
 }
+
+/**
+ * Fecha calendario "hoy" en zona clínica (Costa Rica), alineada con lo que ve el usuario al reservar.
+ */
+function patitas_fecha_hoy_ymd(): string
+{
+    $tz = new DateTimeZone('America/Costa_Rica');
+
+    return (new DateTimeImmutable('now', $tz))->format('Y-m-d');
+}

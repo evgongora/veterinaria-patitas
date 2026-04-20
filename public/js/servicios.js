@@ -1,5 +1,5 @@
 /**
- * Catálogo de servicios: GET público; alta/edición/baja (desactivar) vía api/servicios.php (personal: admin y veterinario).
+ * Catálogo de servicios: route=servicios (GET público; mutaciones staff).
  */
 (function () {
   const STORAGE_KEY = "patitas_servicios";
@@ -35,7 +35,7 @@
   async function cargarServiciosDesdeApi() {
     if (typeof apiGetJson !== "function") return;
     try {
-      const data = await apiGetJson("api/servicios.php");
+      const data = await apiGetJson(patitasApi("servicios"));
       if (data && data.ok && Array.isArray(data.servicios)) {
         guardarServicios(data.servicios);
       }
@@ -259,7 +259,7 @@
       confirmClass: "btn-danger",
     }).then(function (ok) {
       if (!ok) return;
-      apiDeleteJson("api/servicios.php?id=" + encodeURIComponent(id)).then(function (data) {
+      apiDeleteJson(patitasApi("servicios", { id: id })).then(function (data) {
         if (data && data.ok) {
           void cargarServiciosDesdeApi().then(function () {
             pintarTablaAdmin();
@@ -380,8 +380,8 @@
       };
 
       const req = id
-        ? apiPutJson("api/servicios.php", Object.assign({ servicioId: id }, body))
-        : apiPostJson("api/servicios.php", body);
+        ? apiPutJson(patitasApi("servicios"), Object.assign({ servicioId: id }, body))
+        : apiPostJson(patitasApi("servicios"), body);
 
       req
         .then(function (res) {

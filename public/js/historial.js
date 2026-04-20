@@ -1,5 +1,5 @@
 /**
- * Historial clínico — api/historial.php?animalId=
+ * Historial clínico — route=historial&animalId=
  */
 (function () {
   function escapeHtml(s) {
@@ -15,7 +15,7 @@
     const tbody = document.getElementById("tbodyHistorial");
     if (!sel || typeof apiGetJson !== "function") return;
 
-    apiGetJson("api/animales.php").then((data) => {
+    apiGetJson(patitasApi("animales")).then((data) => {
       if (!data || !data.ok) {
         sel.innerHTML = '<option value="">No se pudieron cargar las mascotas</option>';
         if (tbody) {
@@ -58,7 +58,7 @@
     const tbody = document.getElementById("tbodyHistorial");
     if (!tbody || !animalId || typeof apiGetJson !== "function") return;
 
-    apiGetJson("api/historial.php?animalId=" + encodeURIComponent(animalId))
+    apiGetJson(patitasApi("historial", { animalId: animalId }))
       .then((data) => {
         if (!data || !data.ok) {
           tbody.innerHTML = `<tr><td colspan="4" class="text-danger">Error al cargar</td></tr>`;

@@ -20,6 +20,7 @@ class PageController
         'veterinarios',
         'veterinario-formulario',
         'citas-dia',
+        'citas-pendientes',
         'inventario',
         'inventario-formulario',
         'reportes',
